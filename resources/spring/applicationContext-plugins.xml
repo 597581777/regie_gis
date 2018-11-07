@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd">
+	
+	<!-- 
+    	插件配置示例：
+    	比如现在有两个插件：
+    <bean id="bootStart" class="com.icss.BootStartPlugin"/>
+    <bean id="convertResult" class="com.icss.ConvertResultPlugin"/>
+    
+    <bean id="pluginManager" class="com.chinasofti.ro.bizframework.core.plugin.PluginManager">
+		<property name="plugins">
+			<list>
+				<ref local="bootStart"/>
+				<ref local="convertResult"/>
+			</list>  
+		</property>
+	</bean>
+	 -->
+	<!-- <bean id="userSSOClientPlugin" class="com.icss.regiegis.common.plugins.UserSSOClientPlugin"/> 
+	<bean id="pluginManager" class="com.chinasofti.ro.bizframework.core.plugin.PluginManager">
+		<property name="plugins">
+			<list>
+				<ref local="userSSOClientPlugin"/>
+			</list>  
+		</property>
+	</bean> -->
+</beans>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE model-mapping PUBLIC "-//ResourceOne/Model Mapping DTD 5.0//EN" "http://www.chinasofti.com/model-mapping-5.0.dtd">
+
+<model-mapping>
+	<class name="com.icss.regiegis.common.model.OrgModel" table="N_M_ORG">
+		<comment>组织机构操作数据SQL载体</comment>
+		
+		<sql id="findParentOrg" type="default">
+		<![CDATA[
+		SELECT
+    		a.ORG_CODE AS id,
+	    	ORG_NAME   AS name,
+	    	'root'	   AS parentId,
+	    	b.CHILDNUM AS childNum
+		FROM
+		    N_M_ORG a
+		INNER JOIN
+		    (
+		        SELECT
+		            z.ORG_CODE,
+		            COUNT(z1.ORG_CODE) AS CHILDNUM
+		        FROM
+		            N_M_ORG z
+		        LEFT JOIN
+		            N_M_ORG z1
+		        ON
+		            locate(z.ORG_CODE, z1.PARENT_ORG_CODE) = 1
+		        WHERE
+			            z.ORG_CODE = :orgCode
+			        GROUP BY
+			            z.ORG_CODE ) b
+			ON
+			    a.ORG_CODE = b.ORG_CODE
+			ORDER BY
+			    a.SEQ
+		]]>
+		</sql>
+		<sql id="findOrg" type="default">
+		<![CDATA[
+		SELECT
+		    a.ORG_CODE AS id,
+		    ORG_NAME   AS name,
+		    b.childNum,
+		    a.PARENT_ORG_CODE AS parentId
+		FROM
+		    N_M_ORG a
+		LEFT JOIN
+		    (
+	        SELECT
+	            z.ORG_CODE,
+	            COUNT(z1.org_code) AS childNum
+	        FROM
+	            N_M_ORG z
+	        LEFT JOIN
+	            N_M_ORG z1
+	        ON
+	            locate(z.org_code, z1.parent_org_code) = 1
+	        GROUP BY
+	            z.org_code ) b
+		ON
+		    a.org_code = b.org_code
+		WHERE
+		    a.parent_org_code = :orgCode
+		ORDER BY
+		    a.seq
+		]]>
+		</sql>
+		<!-- 根据用户机构代码获取父节点 -->
+		<sql id="findParentGrid" type="default">
+		<![CDATA[
+		SELECT t.grid_code AS id, t.prt_grid_code AS pid,t.grid_name AS name,t3.con AS childNum
+		from t_m_grid_level_three t
+		left join
+		(select t1.prt_grid_code,count(t1.prt_grid_code) AS con from t_m_grid_level_four t1 left join t_m_grid_level_three t2 on
+		t1.prt_grid_code=t2.grid_code where t1.status=1 and t2.status=1 and t1.grid_person=:personUuid
+		 group by t1.prt_grid_code) t3
+		on t.grid_code=t3.prt_grid_code
+		 where t.status=1 and t.org_code=:deptCode
+		
+		]]>
+		</sql>
+		<!-- 获取用户下网格 -->
+		<sql id="findUserGridList" type="default">
+		<![CDATA[
+		SELECT t.GRID_CODE AS id,t.GRID_NAME AS name,t.prt_grid_code AS pId,t3.con AS childNum
+		FROM T_M_GRID_LEVEL_FOUR t
+		LEFT JOIN(select t1.prt_grid_code,count(t1.prt_grid_code)con FROM t_m_grid_level_five t1 
+		LEFT JOIN t_m_grid_level_four t2 
+		ON t1.prt_grid_code=t2.grid_code AND t1.status=1 AND t2.status=1 GROUP BY t1.prt_grid_code)t3
+		ON t.grid_code=t3.prt_grid_code AND t.status=1
+		WHERE t.GRID_PERSON = :personUuid
+		ORDER BY t.GRID_CODE
+		]]>
+		</sql>
+		<sql id="findChildGridList" type="default">
+		<![CDATA[
+		SELECT GRID_CODE AS id,GRID_NAME AS name,PRT_GRID_CODE AS pId
+		FROM T_M_GRID_LEVEL_FIVE 
+		WHERE status=1 AND PRT_GRID_CODE =:gridCode
+		ORDER BY GRID_CODE
+		]]>
+		</sql>
+		<id name="orglevelcode" type="java.lang.String">
+	      <column name="ORGLEVELCODE">
+	        <comment></comment>
+	      </column>
+	    </id>
+	    <property name="orgCode" type="java.lang.String">
+	      <column name="ORG_CODE">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="orgName" type="java.lang.String">
+	      <column name="ORG_NAME">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="aliasName" type="java.lang.String">
+	      <column name="ALIAS_NAME">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="parentOrgCode" type="java.lang.String">
+	      <column name="PARENT_ORG_CODE">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="orgType" type="java.lang.String">
+	      <column name="ORG_TYPE">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="orgTypeName" type="java.lang.String">
+	      <column name="ORG_TYPE_NAME">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="orgLevel" type="java.lang.String">
+	      <column name="ORG_LEVEL">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="orgLevelName" type="java.lang.String">
+	      <column name="ORG_LEVEL_NAME">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="isRegieDept" type="java.lang.String">
+	      <column name="IS_REGIE_DEPT">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="isRegieDeptName" type="java.lang.String">
+	      <column name="IS_REGIE_DEPT_NAME">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="seq" type="java.lang.Integer">
+	      <column name="SEQ">
+	        <comment></comment>
+	      </column>
+	    </property>
+	</class>
+</model-mapping>

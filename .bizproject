@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BizProject META_DEF_ID="com.icss.ro.studio.bizfoundation.module.BizFoundationProject">
+  <id>402894835c613cf2015c62ec4ddc00d1</id>
+  <name>REGIEGIS</name>
+  <description>行业专卖gis</description>
+  <alias>行业专卖GIS</alias>
+  <parent>402894835c613cf2015c613cf24d0000</parent>
+  <version>5.0.5</version>
+  <location>\REGIEGIS</location>
+  <params/>
+  <ref-components/>
+  <ref-resources/>
+  <basepackage>com.chinasofti.regiegis</basepackage>
+</BizProject>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+       	 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd 
+       	 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd"
+       default-autowire="byName" >
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName">
+			<value>org.h2.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:h2:tcp://localhost:9092/test</value>
+		</property>
+		<property name="username">
+			<value>sa</value>
+		</property>
+		<property name="password">
+			<value></value>
+		</property>
+	</bean>
+	
+    <!-- Data Source事务管理方式 在这里会将Connection释放掉 -->
+    <bean id="dsTM" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+    <!-- Data Source事务拦截器 -->
+	<bean id="dsTransactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<!-- 事务拦截器bean需要依赖注入一个事务管理器 -->
+		<property name="transactionManager" ref="dsTM"/>
+		
+		<!-- 定义事务传播属性-->
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+				<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<!-- 指定对满足哪些bean name的bean自动生成业务代理 -->
+		<property name="beanNames">
+			<!-- 所有Dao结尾的Bean需要自动创建事务代理-->
+			<value>*Manager,*Service</value>
+		</property>
+		<!--  下面定义BeanNameAutoProxyCreator所需的事务拦截器-->
+		<property name="interceptorNames">
+			<list>
+				<value>dsTransactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
+		<property name="transactionInterceptor" ref="dsTransactionInterceptor"/>
+	</bean>
+	
+    <bean id="repository" class="com.chinasofti.ro.bizframework.core.orm.DAO" autowire="byName" />
+    <bean id="dao" class="com.chinasofti.ro.bizframework.core.orm.DAO" autowire="byName" />
+    <bean id="beanFactory" class="com.chinasofti.ro.bizframework.core.libs.BeanFactory"/>
+
+	<!-- FOR DEBUG -->
+	<bean id="log4jdbcInterceptor" class="com.chinasofti.ro.bizframework.modules.log4jdbc.DataSourceSpyInterceptor" />
+	<bean id="dataSourceLog4jdbcAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">  
+		<property name="interceptorNames">  
+			<list>  
+				<value>log4jdbcInterceptor</value>          
+			</list> 
+		</property>  
+		<property name="beanNames">  
+			<list>  
+				<value>dataSource</value>  
+			</list>  
+		</property>  
+	</bean> 
+
+	<!-- ****************************************** 缓存机制的配置 ******************************************************** -->	
+	<bean id="cacheMg" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation">
+			<value>classpath:ehcache.xml</value>
+		</property>
+	</bean>
+	<bean id="ehCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheManager">
+			<ref local="cacheMg"/>
+		</property>
+		<property name="cacheName">
+			<value>METHOD_CACHE</value>
+		</property>
+	</bean>
+	<bean id="ehCacheImpl" class="com.chinasofti.ro.bizframework.core.cache.EhCacheImpl">
+		<property name="ehcache">
+			<ref local="ehCache"/>
+		</property>
+	</bean>
+	<bean id="bizCache" class="com.chinasofti.ro.bizframework.core.cache.BizCache" autowire="byName" >
+		<property name="cache">
+			<ref local="ehCacheImpl"/>
+		</property>
+	</bean>
+
+	<bean id="velocityConfigurer" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath">
+			<value>pages/</value>
+		</property>
+    </bean>
+	<bean id="templateLoader" class="com.chinasofti.ro.bizframework.core.template.TemplateLoader">
+		<property name="velocityConfigurer">
+			<ref local="velocityConfigurer"/>
+		</property>
+    </bean>
+    
+</beans>

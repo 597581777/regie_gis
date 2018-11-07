@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE bizframework-mvc PUBLIC "-//BizFramework/bizframework mvc DTD 4.2//EN" "http://www.chinasofti.com/bizframework-mvc.dtd">
+<bizframework-mvc>
+	<!-- 翻页状态保存到session级别的 -->
+	<!--interceptor name="com.chinasofti.ro.bizframework.core.mvc.Interceptor.KeepPageStateInterceptor"  /-->
+	
+	<!-- 对符合条件的控制器进行拦截,可以配置expression="(.)*(OrgRestController)这样的标识 -->
+			
+	<!-- 数据字典控制器 ，具体数据字典在dict.xml中定义 -->
+	<controller name="com.chinasofti.ro.bizframework.modules.dict.DictController">
+		<method name="findDictById" uri="/bizdict/{id}"/>
+	</controller>
+	
+	<controller name="com.chinasofti.ro.bizframework.modules.dirt.DirtController">
+		<method name="findDirtById" uri="/bizdirt/{id}"/>
+	</controller>
+	
+	<controller name="com.chinasofti.ro.bizframework.modules.dsmonitor.DSMController">
+		<method name="index" uri="/bizconsole/dsmonitor">
+			<result name="success">/resourceone/dsm/dsm.jsp</result>
+			<result name="noresult">/resourceone/dsm/dsm-help.jsp</result>
+		</method>
+		<method name="stat" uri="/bizconsole/dsmonitor/stat" />
+		<method name="enableMonitor" uri="/bizconsole/dsmonitor/enable">
+			<result name="success" type="redirect">@index</result>
+		</method>
+		<method name="disableMonitor" uri="/bizconsole/dsmonitor/disable">
+			<result name="success" type="redirect">@index</result>
+		</method>
+		<method name="connClose" uri="/bizconsole/dsmonitor/conn/close" />
+		<method name="connStrace" uri="/bizconsole/dsmonitor/conn/strace">
+			<result name="success">/resourceone/dsm/dsm-conn-strace.jsp</result>
+		</method>
+	</controller>
+	
+	<controller name="com.chinasofti.ro.bizframework.modules.schedule.ScheduleController">
+		<method name="index" uri="/bizconsole/schedule">
+			<result name="success">/resourceone/schedule/index.jsp</result>
+		</method>
+		<method name="index" uri="/bizconsole/schedule/addDialog">
+			<result name="success">/resourceone/schedule/add.jsp</result>
+		</method>
+		<method name="cron" uri="/bizconsole/schedule/cron">
+			<result name="success">/resourceone/schedule/cron.jsp</result>
+		</method>
+		<method name="detail" uri="/bizconsole/schedule/detail">
+			<result name="success">/resourceone/schedule/detail.jsp</result>
+		</method>
+		<method name="getLastException" uri="/bizconsole/schedule/getLastException" />
+		<method name="add" uri="/bizconsole/schedule/add">
+			<result name="success" type="redirect">@index</result>
+		</method>
+		<method name="remove" uri="/bizconsole/schedule/remove">
+			<result name="success" type="redirect">@index</result>
+		</method>
+		<method name="resume" uri="/bizconsole/schedule/resume">
+			<result name="success" type="redirect">@index</result>
+		</method>
+		<method name="pause" uri="/bizconsole/schedule/pause">
+			<result name="success" type="redirect">@index</result>
+		</method>
+	</controller>
+</bizframework-mvc>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>专卖GIS</title>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=IE9">
+      <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+      <link href="../pages/gis/css/amap.css" rel="stylesheet">
+      <!-- 引入 Bootstrap -->
+      <link href="../js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+ 	  
+ 	  <link href="../js/lib/skin/default/tree/zTreeStyle.css" rel="stylesheet">
+      <!-- HTML5 Shim 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询 -->
+      <!--[if lt IE 9]>
+         <script src="../js/bootstrap/js/html5shiv.min.js"></script>
+         <script src="../js/bootstrap/js/respond.min.js"></script>
+      <![endif]-->
+      
+      <style type="text/css">
+      	
+		
+      </style>
+      <script type="text/javascript">
+      </script>
+   </head>
+   <body id="mapBody">
+   	  <div class="menubar">
+   	  	<ul>
+   	  		<li id="licQuery" class="active"><img src="../pages/gis/img/store_1.png"/>零售户查询</li>
+   	  		<!-- <li id="managerMonitor" class=""><img src="../pages/gis/img/man_1.png"/>市管员监控</li> -->
+   	  		<!-- <li id="licLocationVerify" class=""><img src="../pages/gis/img/man_1.png"/>坐标修改审核</li> -->
+   	  	</ul>
+   	  </div>
+   	  <input id="orgCode" type="hidden">
+   	  <section id="licQueryPanel" class="licCav">
+   	  	<header>
+   	  	<form id="licQueryForm" class="queryForm">
+   	  		<dl class="dl-horizontal">
+   	  			<dt>许可证号：</dt><dd><input type="text" id="licNo" name="licNo" placeholder="许可证号" class="form-control" style="width: 170px; height: 22px; line-height: 22px;"></dd>
+   	  			<dt>企业(字号)名称：</dt><dd><input type="text" id="companyName" name="companyName" placeholder="企业(字号)名称" class="form-control" style="width: 170px; height: 22px;line-height: 22px;"></dd>
+   	  			<dt>负责人姓名：</dt><dd><input type="text" id="managerName" name="managerName" placeholder="负责人(经营者)姓名" class="form-control" style="width: 170px; height: 22px;line-height: 22px;"></dd>
+   	  			<dt>&nbsp;</dt><dd style="text-align: right; padding-right: 20px;">
+				<input id="orgSeqCode" type="hidden" name="licQueryQm.orgSeqCode">
+				<input id="unitRank" type="hidden" name="licQueryQm.unitRank">
+				<input id="onlyUnit" type="hidden" name="licQueryQm.onlyUnit">
+   	  			<input id="pageSize" type="hidden" name="page.pageSize">
+   	  			<input id="pageNo" type="hidden" name="page.pageNo">
+   	  			<input class="btn btn-default" id="resetBtn" type="reset" value="清空"></input>&nbsp;&nbsp;
+   	  			<input class="btn btn-info" id="queryBtn" type="button" value="查询" data-toggle="keytooltip" data-placement="bottom" title="按回车键查询"></dd>
+   	  		</dl>
+   	  	</form>
+   	  	<!-- <div class="search">
+   	  	<div class="logo">
+   	  	<img draggable="false" src="../pages/gis/img/logo.png"/>
+   	  	</div>
+   	  	<div class="iptbox" style="border-image: none;">
+	      	<input id="searchipt" class="searchipt" type="text" maxlength="256" placeholder="请输入零售户名称、许可证号" autocomplete="off">
+	        <div id="loading" class="loadingico"></div>
+	        <div id="clear" class="clearico" onclick="javascript:document.getElementById('searchipt').value=''; this.style.display='none';"></div>
+	        <div class="searchbtn" id="searchbtn">
+	        	<i id="search"><img src="../pages/gis/img/search.png" class="searchico" /></i>
+	            <div id="search" class="searchbtn searchico"></div>
+	        </div>        
+      	</div>
+      	</div> -->
+      	<div id="resultPanel" class="resultPanel">
+      		<!-- <div id="loading" class="loadingico" style="display: none;"></div> -->
+			<!-- <table id="licQueryListTable"></table>
+    		<div id="licQueryListPager"></div> -->
+		</div>
+		<div class="paper">
+		<a id="prev" href="javascript:void(0)" data-toggle="keytooltip" data-placement="left" title="上一页"><span class="glyphicon glyphicon-menu-left"></span></a>&nbsp;&nbsp;<a id="next" href="javascript:void(0)" data-toggle="keytooltip" data-placement="right" title="下一页"><span class="glyphicon glyphicon-menu-right"></span></a>
+		</div>
+	   	<div class="packup" style="border-top: 1px dashed #dfdfdf;"><span id="btnLicQueryHid" class="glyphicon glyphicon-menu-up" data-toggle="keytooltip" data-placement="top" title="收起"></span></div>
+   	  	</header>
+   	  </section>
+   	  <section id="managerMonitorPanel" class="licCav" style="display: none;">
+   	 	<header>
+   	 		<form id="orgQueryForm" class="queryForm">
+   	 		<dl class="dl-horizontal">
+   	 			<dt style="width: 90px !important;">所属单位：</dt><dd style="margin-left: 95px !important;">
+   	 			<div class="input-group" style="width:200px;">
+   	 			<input id="orgSelect" readonly="readonly" class="form-control" style="height:22px; background-color: #ffffff; cursor: pointer;" placeholder="选择所属单位"/>
+   	 			<span class="input-group-btn">
+			        <button id="orgSelectBtn" class="btn btn-default" type="button" style="height:22px; padding-top: 1px;"><span class="glyphicon glyphicon-triangle-bottom"></span></button>
+			    </span>
+   	 			</div>
+   	 			<div id="orgTreeComp" class="treeview"><ul id="orgTree" class="ztree"></ul></div>
+   	 			<input id="orgSeqCode_" type="hidden" name="licQueryQm.orgSeqCode">
+				<input id="unitRank_" type="hidden" name="licQueryQm.unitRank">
+				<input id="onlyUnit_" type="hidden" name="licQueryQm.onlyUnit">
+   	 			</dd>
+   	 			<dt>&nbsp;</dt><dd style="text-align: right; margin-right: 20px;">
+			    <input class="btn btn-default" id="resetOrgBtn" type="reset" value="清空"></input>&nbsp;&nbsp;
+   	 			<input type="button" class="btn btn-info" id="queryOrgBtn" type="button" value="查询" data-toggle="keytooltip" data-placement="bottom" title="按回车键查询"></dd>
+   	 		</dl>
+   	 		</form>
+   	 		<div id="resultPanel_" class="resultPanel">
+      		<!-- <div id="loading" class="loadingico" style="display: none;"></div> -->
+			<!-- <table id="licQueryListTable"></table>
+    		<div id="licQueryListPager"></div> -->
+		</div>
+		<div class="paper">
+		<a id="prev_" href="javascript:void(0)" data-toggle="keytooltip" data-placement="left" title="上一页"><span class="glyphicon glyphicon-menu-left"></span></a>&nbsp;&nbsp;<a id="next_" href="javascript:void(0)" data-toggle="keytooltip" data-placement="right" title="下一页"><span class="glyphicon glyphicon-menu-right"></span></a>
+		</div>
+	   	<div class="packup" style="border-top: 1px dashed #dfdfdf;"><span id="btnManagerQueryHid" class="glyphicon glyphicon-menu-up" data-toggle="keytooltip" data-placement="top" title="收起"></span></div>
+   	 	</header>
+   	  </section>
+   	  <div id="right_PathBtn" class="pathDiv" data-toggle="tooltip" data-placement="left" title="路线"><img src="../pages/gis/img/untitled.png"/></div>
+   	  <section id="tipbox" class="tipbox">
+	   	  <header>
+	   	  <div class='traffic_close'><span class="glyphicon glyphicon-remove" data-toggle="keytooltip" data-placement="left" title="关闭路线" onclick="closeLineSearch()"></span></div>
+	   	  <div id="tippanel">
+	   	  <div class="traffic_panel">
+	   	  	<div class="byTabway">
+	   	  	<span><img id="byCartab" src="../pages/gis/img/icon_car.png" data-toggle="tooltip" data-placement="bottom" title="驾车" /></span>
+	   	  	<span><img id="byBustab" src="../pages/gis/img/icon_bus.png" data-toggle="tooltip" data-placement="bottom" title="公交" /></span>
+	   	  	<span><img id="byWalktab" src="../pages/gis/img/icon_walk.png" style="width:16px;" data-toggle="tooltip" data-placement="bottom" title="步行" /></span>
+			<input type="hidden" id="tabway_SelectId" value='cartab'/>
+			</div>
+	   	  	<div class="tabwayInput">
+	   	  		<form id="tabway_form">
+				<span id="exchange" class="glyphicon glyphicon-sort">
+				</span>
+	   	  		<div id="searchInputDiv" class="inputDiv">
+	   	  			<div class="input-group">
+					  <span class="input-group-addon addon">起</span>
+					  <input id="dir_from" class="form-control dir-control" placeholder="请输入起点" type="text"/>
+					</div>
+					<div id="pointDiv"></div>
+					<div class="input-group">
+					  <span class="input-group-addon addon">终</span>
+					  <input id="dir_to" class="form-control dir-control" placeholder="请输入终点" type="text"/>
+					  <span id="addPoint" class="glyphicon glyphicon-plus dir_point"></span>
+					</div>
+					<div id="tabwaybtnDiv" style="margin-right:20px; margin-top:10px;text-align: right">
+					<a id="clearPath" href="javascript:void(0)" class="text_a" style="color:#ffffff; margin-right:135px;display: none;">清除路线</a>
+					<input id="btnTabway" type="button" class="btn btn-info" value="开车去" /></div>
+	   	  		</div>
+	   	  		<div class="packup"><span id="btnTabwayFormHid" class="glyphicon glyphicon-menu-up" style="color: #ffffff;"></span></div>
+	   	  		</form>
+	   	  	</div>
+	   	  	<div class="resultCont">
+		   	  	<div id="myLocalDiv" class="myLocalDiv"><img src="../pages/gis/img/loc_ok.png"/><a id="myLocal" href="javascript:void(0);">我的位置</a>
+			   	  	<input type="hidden" value="" id="myLocalTarget"/>
+			  	</div>
+		   	  	<div id="traffic" class="traffic"></div>
+	   	  	</div>
+	   	  </div>
+	   	  </div>
+	   	  </header>
+   	  </section>
+   	  <div id="mapcontainer" class="container">
+   	  </div>
+   	  
+      <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+      <script type="text/javascript" src="../js/jquery/jquery.js"></script>
+      <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=ca60a4421188fde94e564c3616c87d1c"></script>
+      <script type="text/javascript" src="../js/bootstrap/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="../js/zTree/js/jquery.ztree.all.min.js"></script>
+      <script type="text/javascript" src="../js/jquery/jquery.placeholder.min.js"></script>
+      <script type="text/javascript" src="../pages/gis/js/layer/layer.js"></script>
+   	  <script type="text/javascript" src="../pages/gis/js/common.js"></script>
+   	  <script type="text/javascript" src="../pages/gis/js/index.js"></script>
+   </body>
+</html>

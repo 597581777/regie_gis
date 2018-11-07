@@ -1,0 +1,190 @@
+<!-- 
+ 	@author BizFoundation Team: zhaoqy
+    @version 1.0
+    @since 4.2
+-->
+<!ELEMENT bizframework-mvc ( (interceptor | controller)* )>
+<!-- 
+定义一个Controller，每个Controller中的public void 的方法与uri进行映射，响应用户的请求
+	
+Used in: bizframework-mvc
+-->
+<!ELEMENT controller ((method | interceptor)*)>
+<!-- 
+定义Controller的名称，包含package名:com.csi.oa.UserController
+	
+Used in: controller
+-->
+<!ATTLIST controller name CDATA #IMPLIED>
+<!-- 
+废弃的属性，只为兼容用，请使用baseuri
+	
+Used in: controller
+-->
+<!ATTLIST controller basePath CDATA #IMPLIED>
+<!-- 
+定义url地址中的公共部分，比如用户管理模块下的所有的uri都是以user开头
+/user/show,/user/edit,/user/delete等，那么可以定义为baseuri
+	
+Used in: controller
+-->
+<!ATTLIST controller baseuri CDATA #IMPLIED>
+<!-- 
+当没有定义Controller的方法与uri映射时，默认访问的方法
+	
+Used in: controller
+-->
+<!ATTLIST controller defaultMethod CDATA #IMPLIED>
+<!-- 
+Controller级别的拦截器，只对此Controller有效
+	
+Used in: controller
+-->
+<!ATTLIST controller interceptor CDATA #IMPLIED>
+
+<!-- controller级别的上传策略 -->
+<!ATTLIST controller uploadPolicy CDATA #IMPLIED>
+<!ATTLIST controller uploadPath CDATA #IMPLIED>
+<!-- 
+定义uri与Controller的method之间的映射
+	
+Used in: controller
+-->
+<!ELEMENT method ((interceptor | result)*)>
+<!-- 
+废弃的属性，只为兼容用，请使用uri
+	
+Used in: method
+-->
+<!ATTLIST method path CDATA #IMPLIED>
+<!-- 
+自定义uri，支持以{变量名称}方式传递参数（也就是GET方式的，通过url传递参数）
+	
+Used in: method
+	
+Example:
+	
+	/user/show/{userid}
+-->
+<!ATTLIST method uri CDATA #IMPLIED>
+<!-- 
+method的名称
+	
+Used in: method
+-->
+<!ATTLIST method name CDATA #IMPLIED>
+<!ATTLIST method httpMethod CDATA #IMPLIED>
+<!ATTLIST method defaultArgs CDATA #IMPLIED>
+
+<!-- method级别的上传策略 -->
+<!ATTLIST method uploadPolicy CDATA #IMPLIED>
+<!ATTLIST method uploadPath CDATA #IMPLIED>
+
+<!-- 生成构件描述文件时需要的两个属性-->
+<!-- displayName ：资源名称 
+Used in: method
+-->
+<!ATTLIST method displayName CDATA #IMPLIED>
+<!-- isEnterRes ：模块入口（true为模块入口）
+Used in: method
+-->
+<!ATTLIST method isEnterRes CDATA #IMPLIED>
+
+<!-- 
+定义方法级别的拦截器，只对此方法有效
+	
+Used in: method
+-->
+<!ATTLIST method interceptor CDATA #IMPLIED>
+<!-- 
+定义拦截器，拦截器可以对Controller运行进行干涉。
+	
+Used in: bizframework-mvc 
+	
+Example:
+	
+	<interceptor name="com.csi.oa.LoginInterceptor" />
+-->
+<!ELEMENT interceptor EMPTY>
+<!-- 
+拦截器的实现类的名称，包含完整的package
+	
+Used in: interceptor
+-->
+<!ATTLIST interceptor name CDATA #IMPLIED>
+<!-- 
+使用ref可以直接引用定义在Spring容器中的bean的ID
+注意ref与name是冲突的，只能使用一个
+	
+Used in: interceptor
+-->
+<!ATTLIST interceptor ref CDATA #IMPLIED>
+<!-- 
+拦截器的执行顺序
+注意：由于*.mvc.xml可能有多个，index属性只表示在某一个mvc.xml中的执行顺序
+	
+Used in: interceptor
+-->
+<!ATTLIST interceptor index CDATA #IMPLIED>
+<!-- 
+用来设定哪些Controller(action)需要执行这个interceptor，支持正则表达式
+	
+Used in: interceptor 
+-->
+<!ATTLIST interceptor expression CDATA #IMPLIED>
+<!-- 
+用来设定哪些controller或者方法不执行此拦截器
+
+Used in: interceptor 
+-->
+<!ATTLIST interceptor exclude CDATA #IMPLIED>
+
+<!-- 
+定义Controller的执行结果（视图）
+
+Used in: method 
+-->
+<!ELEMENT result (#PCDATA)* >
+<!-- 
+定义Controller的执行完后跳转或者重定向到视图的名称
+	
+Used in: result 
+
+Example:
+	mvc.xml:
+		<result name="success">user/userList</result>
+	controller：
+		render("success");表示跳转到user/userList.jsp
+-->
+<!ATTLIST result name CDATA #REQUIRED>
+<!-- 
+定义Controller的执行完后跳转或者重定向到页面
+	
+Used in: result 
+
+Example:
+
+	mvc.xml:
+		<result name="success" path="user/userList" />
+	controller：
+		render("success");表示跳转到user/userList.jsp
+-->
+<!ATTLIST result path CDATA #IMPLIED>
+<!-- 
+定义是跳转还是重定向，默认不写表示跳转
+	
+Used in: result 
+
+Example:
+	mvc.xml:
+		<result name="success" type="redirect">user/userList</result>
+	controller：
+		redirect("success");表示重定向到user/userList.jsp
+-->
+<!ATTLIST result type CDATA #IMPLIED>
+<!-- 
+暂时没用
+	
+Used in: result 
+-->
+<!ATTLIST result target CDATA #IMPLIED>

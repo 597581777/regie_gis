@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE model-mapping PUBLIC "-//ResourceOne/Model Mapping DTD 5.0//EN" "http://www.chinasofti.com/model-mapping-5.0.dtd">
+
+<model-mapping>
+  <class name="com.icss.regiegis.licquery.model.TLicLocationVerify" table="T_LIC_LOCATION_VERIFY">
+    <comment>TLicLocationVerify</comment>
+    <sql id="list" type="default"><![CDATA[SELECT T_ID,LIC_NO,ORG_CODE,OLD_LONGITUDE,OLD_LATITUDE,LONGITUDE,LATITUDE,APPLY_PERSON_UUID,APPLY_PERSON_NAME,APPLY_TIME,APPROVE_PERSON_UUID,APPROVE_PERSON_NAME,APPROVE_TIME,APPROVE_STATUS FROM T_LIC_LOCATION_VERIFY WHERE 1=1]]></sql>
+    
+    <sql id="queryList" type="default">
+    <![CDATA[
+    	SELECT t.T_ID,t.LIC_NO,t.ORG_CODE,t.OLD_LONGITUDE,t.OLD_LATITUDE,t.LONGITUDE,t.LATITUDE,t.APPLY_PERSON_UUID,t.APPLY_PERSON_NAME,t.APPLY_TIME,t.APPROVE_PERSON_UUID,t.APPROVE_PERSON_NAME,t.APPROVE_TIME ,t.APPROVE_STATUS,t1.MANAGER_NAME as managerName, 
+    		t.APPLY_TIME applyTimeStr,t.APPROVE_TIME approveTimeStr,
+    		t1.COMPANY_NAME AS companyName, 
+    		COALESCE(t1.BUSINESS_ADDR,t1.retail_address)as address,
+			t1.gridding,t1.LIC_ISSUING_ORG AS orgName,t1.STAFF_MEMBER_UUID as staffMemberuuid,t1.STAFF_MEMBER_NAME as staffMembername
+		FROM T_LIC_LOCATION_VERIFY t 
+		LEFT JOIN T_LIC_RLIC_INFO t1
+		ON t.lic_no=t1.lic_no
+    	WHERE 1=1
+    		#if(${orgCode})  
+    			AND t.ORG_CODE LIKE ${sqlUtil.like(":orgCode")}
+    		#end
+			#if(${licNo})
+				AND t.LIC_NO LIKE ${sqlUtil.like(":licNo")}
+			#end
+			#if(${managerName})
+				AND t1.MANAGER_NAME LIKE ${sqlUtil.like(":managerName")}
+			#end
+			#if(${companyName})
+		    	AND t1.COMPANY_NAME LIKE ${sqlUtil.like(":companyName")}
+			#end
+			#if(${approveStatus})
+				AND t.APPROVE_STATUS=:approveStatus
+			#end
+	    ORDER BY t.APPROVE_STATUS
+    ]]></sql>
+    
+    <sql id="queryById" type="default">
+    <![CDATA[
+    SELECT 
+    	T_ID,LIC_NO,ORG_CODE,OLD_LONGITUDE,OLD_LATITUDE,LONGITUDE,LATITUDE,APPLY_PERSON_UUID,APPLY_PERSON_NAME,APPLY_TIME,APPROVE_PERSON_UUID,APPROVE_PERSON_NAME,APPROVE_TIME,APPROVE_STATUS 
+    FROM T_LIC_LOCATION_VERIFY 
+    WHERE T_ID=:tId
+    ]]></sql>
+    
+    
+    <id name="tId" type="java.lang.String">
+      <column name="T_ID" not-null="true" length="32">
+        <comment>tId</comment>
+      </column>
+      <generator class="uuid"/>
+    </id>
+    <property name="licNo" type="java.lang.String">
+      <column name="LIC_NO" length="32">
+        <comment>licNo</comment>
+      </column>
+    </property>
+    <property name="orgCode" type="java.lang.String">
+      <column name="ORG_CODE" length="32">
+        <comment>orgCode</comment>
+      </column>
+    </property>
+    <property name="oldLongitude" type="java.lang.String">
+      <column name="OLD_LONGITUDE" length="32">
+        <comment>oldLongitude</comment>
+      </column>
+    </property>
+    <property name="oldLatitude" type="java.lang.String">
+      <column name="OLD_LATITUDE" length="32">
+        <comment>oldLatitude</comment>
+      </column>
+    </property>
+    <property name="longitude" type="java.lang.String">
+      <column name="LONGITUDE" length="32">
+        <comment>longitude</comment>
+      </column>
+    </property>
+    <property name="latitude" type="java.lang.String">
+      <column name="LATITUDE" length="32">
+        <comment>latitude</comment>
+      </column>
+    </property>
+    <property name="applyPersonUuid" type="java.lang.String">
+      <column name="APPLY_PERSON_UUID" length="32">
+        <comment>applyPersonUuid</comment>
+      </column>
+    </property>
+    <property name="applyPersonName" type="java.lang.String">
+      <column name="APPLY_PERSON_NAME" length="32">
+        <comment>applyPersonName</comment>
+      </column>
+    </property>
+    <property name="applyTime" type="java.sql.Timestamp">
+      <column name="APPLY_TIME">
+        <comment>applyTime</comment>
+      </column>
+    </property>
+    <property name="approvePersonUuid" type="java.lang.String">
+      <column name="APPROVE_PERSON_UUID" length="32">
+        <comment>approvePersonUuid</comment>
+      </column>
+    </property>
+    <property name="approvePersonName" type="java.lang.String">
+      <column name="APPROVE_PERSON_NAME" length="32">
+        <comment>approvePersonName</comment>
+      </column>
+    </property>
+    <property name="approveTime" type="java.sql.Timestamp">
+      <column name="APPROVE_TIME">
+        <comment>approveTime</comment>
+      </column>
+    </property>
+    <property name="approveStatus" type="java.lang.Integer">
+      <column name="APPROVE_STATUS">
+        <comment>approveStatus</comment>
+      </column>
+    </property>
+  </class>
+</model-mapping>

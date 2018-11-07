@@ -1,0 +1,35 @@
+<!DOCTYPE weblogic-web-app PUBLIC "-//BEA Systems, Inc.//DTD Web Application 8.1//EN" "http://www.bea.com/servers/wls810/dtd/weblogic810-web-jar.dtd">
+
+<weblogic-web-app>
+<reference-descriptor>
+<resource-description>
+<res-ref-name>jdbc/REGIEAPP</res-ref-name>
+<jndi-name>jdbc/REGIEAPP</jndi-name>
+</resource-description>
+<!-- 与Portal/Freamwork产品集成时所需要的JNDI数据源
+如果应用集成到Portal/Freamwork产品时取消注释
+<resource-description>
+<res-ref-name>ResourceOne/DataSource</res-ref-name>
+<jndi-name>ResourceOne/DataSource</jndi-name>
+</resource-description>
+-->
+</reference-descriptor>
+
+<session-descriptor>
+<session-param>
+<param-name>CookieName</param-name>
+<param-value>JSESSIONIDREGIEGIS</param-value>
+</session-param>
+</session-descriptor>
+
+<container-descriptor>
+<filter-dispatched-requests-enabled>false</filter-dispatched-requests-enabled>
+<!-- 如果发现在weblogic下log打不出来，可以尝试打开这个配置
+<prefer-application-packages>
+<package-name>org.slf4j</package-name>
+</prefer-application-packages>
+-->
+</container-descriptor>
+<context-root>/REGIEGIS</context-root>
+</weblogic-web-app>
+

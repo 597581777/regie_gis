@@ -1,0 +1,1517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE model-mapping PUBLIC "-//ResourceOne/Model Mapping DTD 5.0//EN" "http://www.chinasofti.com/model-mapping-5.0.dtd">
+
+<model-mapping>
+  <class name="com.icss.regiegis.licquery.model.LicQueryQm">
+    <comment>许可证查询体</comment>
+    <sql id="licQuery" type="default">
+    <![CDATA[
+    	SELECT
+		    A.LIC_UUID,
+		    A.LIC_NO,
+		    A.COMPANY_NAME,
+		    A.MANAGER_NAME,
+		    A.VALIDATE_START,
+		    A.VALIDATE_END,
+		    A.BUSINESS_ADDR,
+		    A.NOW_EFFECT_STATUS,
+		    A.BIZ_FORMAT,
+		    A.CREATE_TIME,
+		    A.IDCARD,
+		    A.INDU_COMM_BUSINESS_LICENCE_NUMBER,
+		    A.BUSI_MGR_LIC_VALIDITY,
+		    A.SUPPLY_COMPANY,
+		    A.ACCREDI_DATE,
+		    A.ISSUE_DATE,
+		    A.DELIVERY_DATE,
+		    A.LIC_ISSUING_ORG,
+		    A.MANAGER_SCOPE,
+		    A.GROUND_OWNERSHIP,
+		    A.LEASE_TIMELIMIT_START,
+		    A.LEASE_TIMELIMIT_END,
+		    A.RETAIL_CID_TYPE,
+		    A.RETAIL_CID_NO,
+		    A.RETAIL_CID_ADDRESS,
+		    A.RETAIL_ADDRESS,
+		    A.CONTRACT_PERSON,
+		    A.RETAIL_TEL,
+		    A.SPECIAL_PERSON_GROUP,
+		    A.AREA_TYPE,
+		    A.ECO_TYPE,
+		    A.ECO_TYPE_OTHER,
+		    A.BIZ_AREA,
+		    A.IS_CHAIN,
+		    A.IS_MAIN,
+		    A.SPECIAL_GROUP_TYPE_OTHER,
+		    A.OLD_LIC_NO,
+		    A.AGENT_NAME,
+		    A.AGENT_IDCARD,
+		    A.FIRST_ACCREDI_DATE,
+		    A.REGISTERED_CAPITAL,
+		    A.LAST_OPERATE_COMPLETE_TIME,
+		    A.GRIDDING,
+		    A.LONGITUDE,
+    		A.LATITUDE,
+		    B.ORG_SEQ_CODE UNIT_CODE,
+		    B.ORG_NAME
+		FROM
+		    T_LIC_RLIC_INFO A
+		INNER JOIN
+		    T_TM_ORG_BASE_INFO B
+		ON
+		    A.ORG_UUID = B.ORG_UUID
+		AND B.EFFECTIVE_STATUS = 1
+		WHERE
+		    1=1
+		#if(${orgSeqCode}) 
+			AND ORG_SEQ_CODE = :orgSeqCode
+		#end
+		#if(${licNo})
+		    AND LIC_NO LIKE ${sqlUtil.like(":licNo")}
+		#end
+		#if(${companyName})
+		    AND COMPANY_NAME LIKE ${sqlUtil.like(":companyName")}
+		#end
+		#if(${managerName})
+		    AND MANAGER_NAME LIKE ${sqlUtil.like(":managerName")}
+		#end
+		#if(${idCard})
+		    AND IDCARD LIKE ${sqlUtil.like(":idCard")}
+		#end
+		ORDER BY CREATE_TIME DESC
+    ]]>
+    </sql>
+    <sql id="queryLicInfo" type="default">
+    <![CDATA[
+    	SELECT
+		    A.LIC_UUID,
+		    A.LIC_NO,
+		    A.COMPANY_NAME,
+		    A.MANAGER_NAME,
+		    A.VALIDATE_START,
+		    A.VALIDATE_END,
+		    A.BUSINESS_ADDR,
+		    A.NOW_EFFECT_STATUS,
+		    A.BIZ_FORMAT,
+		    A.CREATE_TIME,
+		    A.IDCARD,
+		    A.INDU_COMM_BUSINESS_LICENCE_NUMBER,
+		    A.BUSI_MGR_LIC_VALIDITY,
+		    A.SUPPLY_COMPANY,
+		    A.ACCREDI_DATE,
+		    A.ISSUE_DATE,
+		    A.DELIVERY_DATE,
+		    A.LIC_ISSUING_ORG,
+		    A.MANAGER_SCOPE,
+		    A.GROUND_OWNERSHIP,
+		    A.LEASE_TIMELIMIT_START,
+		    A.LEASE_TIMELIMIT_END,
+		    A.RETAIL_CID_TYPE,
+		    A.RETAIL_CID_NO,
+		    A.RETAIL_CID_ADDRESS,
+		    A.RETAIL_ADDRESS,
+		    A.CONTRACT_PERSON,
+		    A.RETAIL_TEL,
+		    A.SPECIAL_PERSON_GROUP,
+		    A.AREA_TYPE,
+		    A.ECO_TYPE,
+		    A.ECO_TYPE_OTHER,
+		    A.BIZ_AREA,
+		    A.IS_CHAIN,
+		    A.IS_MAIN,
+		    A.SPECIAL_GROUP_TYPE_OTHER,
+		    A.OLD_LIC_NO,
+		    A.AGENT_NAME,
+		    A.AGENT_IDCARD,
+		    A.FIRST_ACCREDI_DATE,
+		    A.REGISTERED_CAPITAL,
+		    A.LAST_OPERATE_COMPLETE_TIME,
+		    A.GRIDDING,
+		    B.ORG_SEQ_CODE UNIT_CODE,
+		    B.ORG_NAME,
+		    A.LONGITUDE,
+    		A.LATITUDE
+		FROM
+		    T_LIC_RLIC_INFO A
+		INNER JOIN
+		    T_TM_ORG_BASE_INFO B
+		ON
+		    A.ORG_UUID = B.ORG_UUID
+		AND B.EFFECTIVE_STATUS = 1
+		WHERE
+		    1=1
+		#if(${unitCode}) 
+			AND ORG_SEQ_CODE = :unitCode
+		#end
+		#if(${licUuid})
+		    AND LIC_UUID = :licUuid
+		#end
+		#if(${licNo})
+		    AND LIC_NO = ${sqlUtil.like(":licNo")}
+		#end
+		#if(${companyName})
+		    AND COMPANY_NAME = ${sqlUtil.like(":companyName")}
+		#end
+		#if(${MANAGER_NAME})
+		    AND MANAGER_NAME = ${sqlUtil.like(":managerName")}
+		#end
+		#if(${idCard})
+		    AND IDCARD = ${sqlUtil.like(":idCard")}
+		#end
+    ]]>
+    </sql>
+	
+    <id name="applyInfoUuid" type="java.lang.String">
+      <column name="APPLY_INFO_UUID" >
+        <comment>applyInfoUuid</comment>
+      </column>
+    </id>
+    <property name="licUuid" type="java.lang.String">
+      <column name="LIC_UUID" >
+        <comment>licUuid</comment>
+      </column>
+    </property>
+    <property name="companyName" type="java.lang.String">
+      <column name="COMPANY_NAME" >
+        <comment>companyName</comment>
+      </column>
+    </property>
+    <property name="induCommBusinessLicenceNumber" type="java.lang.String">
+      <column name="INDU_COMM_BUSINESS_LICENCE_NUMBER" >
+        <comment>induCommBusinessLicenceNumber</comment>
+      </column>
+    </property>
+    <property name="managerName" type="java.lang.String">
+      <column name="MANAGER_NAME" >
+        <comment>managerName</comment>
+      </column>
+    </property>
+    <property name="idcard" type="java.lang.String">
+      <column name="IDCARD" >
+        <comment>idcard</comment>
+      </column>
+    </property>
+    <property name="companyEconomyType" type="java.lang.String">
+      <column name="COMPANY_ECONOMY_TYPE" >
+        <comment>companyEconomyType</comment>
+      </column>
+    </property>
+    <property name="businessAddr" type="java.lang.String">
+      <column name="BUSINESS_ADDR" >
+        <comment>businessAddr</comment>
+      </column>
+    </property>
+    <property name="isDifferHomeAddr" type="java.lang.String">
+      <column name="IS_DIFFER_HOME_ADDR" >
+        <comment>isDifferHomeAddr</comment>
+      </column>
+    </property>
+    <property name="supplyCompany" type="java.lang.String">
+      <column name="SUPPLY_COMPANY" >
+        <comment>supplyCompany</comment>
+      </column>
+    </property>
+    <property name="accrediDate" type="java.sql.Date">
+      <column name="ACCREDI_DATE" >
+        <comment>accrediDate</comment>
+      </column>
+    </property>
+    <property name="validateStart" type="java.sql.Date">
+      <column name="VALIDATE_START" >
+        <comment>validateStart</comment>
+      </column>
+    </property>
+    <property name="validateEnd" type="java.sql.Date">
+      <column name="VALIDATE_END" >
+        <comment>validateEnd</comment>
+      </column>
+    </property>
+    <property name="deliveryDate" type="java.sql.Date">
+      <column name="DELIVERY_DATE" >
+        <comment>deliveryDate</comment>
+      </column>
+    </property>
+    <property name="issueDate" type="java.sql.Date">
+      <column name="ISSUE_DATE" >
+        <comment>issueDate</comment>
+      </column>
+    </property>
+    <property name="nowEffectStatus" type="java.lang.String">
+      <column name="NOW_EFFECT_STATUS" >
+        <comment>nowEffectStatus</comment>
+      </column>
+    </property>
+    <property name="column3" type="java.lang.String">
+      <column name="COLUMN3" >
+        <comment>column3</comment>
+      </column>
+    </property>
+    <property name="licIssuingOrg" type="java.lang.String">
+      <column name="LIC_ISSUING_ORG" >
+        <comment>发证机关</comment>
+      </column>
+    </property>
+    <property name="resalePersonId" type="java.lang.String">
+      <column name="RESALE_PERSON_ID" >
+        <comment>resalePersonId</comment>
+      </column>
+    </property>
+    <property name="managerScope" type="java.lang.String">
+      <column name="MANAGER_SCOPE" >
+        <comment>managerScope</comment>
+      </column>
+    </property>
+    <property name="groundOwnership" type="java.lang.String">
+      <column name="GROUND_OWNERSHIP" >
+        <comment>groundOwnership</comment>
+      </column>
+    </property>
+    <property name="leaseTimelimitStart" type="java.sql.Timestamp">
+      <column name="LEASE_TIMELIMIT_START" >
+        <comment>leaseTimelimitStart</comment>
+      </column>
+    </property>
+    <property name="leaseTimelimitEnd" type="java.sql.Timestamp">
+      <column name="LEASE_TIMELIMIT_END" >
+        <comment>leaseTimelimitEnd</comment>
+      </column>
+    </property>
+    <property name="licNo" type="java.lang.String">
+      <column name="LIC_NO">
+        <comment>零售许可证编号</comment>
+      </column>
+    </property>
+    <property name="currentNode" type="java.lang.String">
+      <column name="CURRENT_NODE" >
+        <comment>当前所处节点</comment>
+      </column>
+    </property>
+    <property name="applyType" type="java.lang.Short">
+      <column name="APPLY_TYPE" >
+        <comment>申请类型</comment>
+      </column>
+    </property>
+    <property name="fileCode" type="java.lang.String">
+      <column name="FILE_CODE" >
+        <comment>卷宗编号</comment>
+      </column>
+    </property>
+    <property name="isOnlineBooking" type="java.lang.Short">
+      <column name="IS_ONLINE_BOOKING" >
+        <comment>是否为网上预约</comment>
+      </column>
+    </property>
+    <property name="applyDeadline" type="java.sql.Timestamp">
+      <column name="APPLY_DEADLINE" >
+        <comment>申请截止期限日期</comment>
+      </column>
+    </property>
+    <property name="replyDecide" type="java.lang.Short">
+      <column name="REPLY_DECIDE" >
+        <comment>答复书决定</comment>
+      </column>
+    </property>
+    <property name="docReviewIsPass" type="java.lang.Short">
+      <column name="DOC_REVIEW_IS_PASS" >
+        <comment>书面审查是否通过</comment>
+      </column>
+    </property>
+    <property name="fieldAduitDeadline" type="java.sql.Timestamp">
+      <column name="FIELD_ADUIT_DEADLINE" >
+        <comment>实地核查期限日期</comment>
+      </column>
+    </property>
+    <property name="fieldAduitIsPass" type="java.lang.Short">
+      <column name="FIELD_ADUIT_IS_PASS" >
+        <comment>实地核查是否通过</comment>
+      </column>
+    </property>
+    <property name="fieldAduitSubmitTime" type="java.sql.Timestamp">
+      <column name="FIELD_ADUIT_SUBMIT_TIME" >
+        <comment>实地核查提交时间</comment>
+      </column>
+    </property>
+    <property name="fieldAduitResultSubmitTime" type="java.sql.Timestamp">
+      <column name="FIELD_ADUIT_RESULT_SUBMIT_TIME" >
+        <comment>实地核查结果提交时间</comment>
+      </column>
+    </property>
+    <property name="isApprove" type="java.lang.Short">
+      <column name="IS_APPROVE" >
+        <comment>审批是否通过</comment>
+      </column>
+    </property>
+    <property name="licensingDecide" type="java.lang.Short">
+      <column name="LICENSING_DECIDE" >
+        <comment>是否作出许可决定</comment>
+      </column>
+    </property>
+    <property name="firstPrintLicDate" type="java.sql.Timestamp">
+      <column name="FIRST_PRINT_LIC_DATE" >
+        <comment>首次制证日期</comment>
+      </column>
+    </property>
+    <property name="isHearing" type="java.lang.Short">
+      <column name="IS_HEARING" >
+        <comment>是否听证</comment>
+      </column>
+    </property>
+    <property name="hearingBeginTime" type="java.sql.Timestamp">
+      <column name="HEARING_BEGIN_TIME" >
+        <comment>听证开始时间</comment>
+      </column>
+    </property>
+    <property name="hearingEndTime" type="java.sql.Timestamp">
+      <column name="HEARING_END_TIME" >
+        <comment>听证结束时间</comment>
+      </column>
+    </property>
+    <property name="fieldAduitPhoto" type="java.lang.String">
+      <column name="FIELD_ADUIT_PHOTO" >
+        <comment>零售许可证申请实地核查表【照片】</comment>
+      </column>
+    </property>
+    <property name="isExtend" type="java.lang.Short">
+      <column name="IS_EXTEND" >
+        <comment>是否延期</comment>
+      </column>
+    </property>
+    <property name="decideDate" type="java.sql.Timestamp">
+      <column name="DECIDE_DATE" >
+        <comment>决定日期</comment>
+      </column>
+    </property>
+    <property name="isBookbuild" type="java.lang.Short">
+      <column name="IS_BOOKBUILD" >
+        <comment>是否立卷 0、未立卷 1、已立卷</comment>
+      </column>
+    </property>
+    <property name="bookbuildTime" type="java.sql.Timestamp">
+      <column name="BOOKBUILD_TIME" >
+        <comment>立卷日期</comment>
+      </column>
+    </property>
+    <property name="acceptDate" type="java.sql.Timestamp">
+      <column name="ACCEPT_DATE" >
+        <comment>受理日期</comment>
+      </column>
+    </property>
+    <property name="applyDate" type="java.sql.Timestamp">
+      <column name="APPLY_DATE" >
+        <comment>applyDate</comment>
+      </column>
+    </property>
+    <property name="isInspect" type="java.lang.String">
+      <column name="IS_INSPECT" >
+        <comment>isInspect</comment>
+      </column>
+    </property>
+    <property name="extendDays" type="java.lang.String">
+      <column name="EXTEND_DAYS" >
+        <comment>extendDays</comment>
+      </column>
+    </property>
+    <property name="noPassingReason" type="java.lang.String">
+      <column name="NO_PASSING_REASON" >
+        <comment>noPassingReason</comment>
+      </column>
+    </property>
+    <property name="licValidatyStart" type="java.sql.Date">
+      <column name="LIC_VALIDATY_START" >
+        <comment>licValidatyStart</comment>
+      </column>
+    </property>
+    <property name="licValidatyEnd" type="java.sql.Date">
+      <column name="LIC_VALIDATY_END" >
+        <comment>licValidatyEnd</comment>
+      </column>
+    </property>
+    <property name="fileSeq" type="java.lang.String">
+      <column name="FILE_SEQ" >
+        <comment>卷宗序列号</comment>
+      </column>
+    </property>
+    <property name="acceptResult" type="java.lang.String">
+      <column name="ACCEPT_RESULT" >
+        <comment>acceptResult</comment>
+      </column>
+    </property>
+    <property name="liddId" type="java.lang.String">
+      <column name="LIDD_ID" >
+        <comment>业务项所需文书明细表流水ID</comment>
+      </column>
+    </property>
+    <property name="lbidId" type="java.lang.String">
+      <column name="LBID_ID" >
+        <comment>业务项所需文书主表流水ID</comment>
+      </column>
+    </property>
+    <property name="bdtId" type="java.lang.String">
+      <column name="BDT_ID" >
+        <comment>文书类流水ID</comment>
+      </column>
+    </property>
+    <property name="liddCode" type="java.lang.String">
+      <column name="LIDD_CODE" >
+        <comment>文书编号</comment>
+      </column>
+    </property>
+    <property name="liddIsFinish" type="java.lang.Integer">
+      <column name="LIDD_IS_FINISH" >
+        <comment>文书是否完成</comment>
+      </column>
+    </property>
+    <property name="liddIsOverdue" type="java.lang.Integer">
+      <column name="LIDD_IS_OVERDUE" >
+        <comment>文书是否逾期</comment>
+      </column>
+    </property>
+    <property name="bcbEnumLiddStatus" type="java.lang.Integer">
+      <column name="BCB_ENUM_LIDD_STATUS" >
+        <comment>申请书状态（枚举）</comment>
+      </column>
+    </property>
+    <property name="bcbEnumLbtiStatus" type="java.lang.Integer">
+      <column name="BCB_ENUM_LBTI_STATUS" >
+        <comment>文书办理状态（枚举）</comment>
+      </column>
+    </property>
+    <property name="liddPrintTimes" type="java.lang.Integer">
+      <column name="LIDD_PRINT_TIMES" >
+        <comment>打印次数</comment>
+      </column>
+    </property>
+    <property name="liddDocDate" type="java.sql.Date">
+      <column name="LIDD_DOC_DATE" >
+        <comment>文书日期</comment>
+      </column>
+    </property>
+    <property name="liddIsSend" type="java.lang.Integer">
+      <column name="LIDD_IS_SEND" >
+        <comment>是否送达</comment>
+      </column>
+    </property>
+    <property name="personuuidTransact" type="java.lang.String">
+      <column name="PERSONUUID_TRANSACT" >
+        <comment>办理人</comment>
+      </column>
+    </property>
+    <property name="liddFinishTime" type="java.sql.Date">
+      <column name="LIDD_FINISH_TIME" >
+        <comment>完成时间</comment>
+      </column>
+    </property>
+    <property name="bcbEnumLiddFlow" type="java.lang.Integer">
+      <column name="BCB_ENUM_LIDD_FLOW" >
+        <comment>流程状态（枚举）</comment>
+      </column>
+    </property>
+    <property name="liddPicNumber" type="java.lang.Integer">
+      <column name="LIDD_PIC_NUMBER" >
+        <comment>图片数量</comment>
+      </column>
+    </property>
+    <property name="liddIsAlreadyPic" type="java.lang.Integer">
+      <column name="LIDD_IS_ALREADY_PIC" >
+        <comment>图片是否已上传</comment>
+      </column>
+    </property>
+    <property name="liddIsSaveWord" type="java.lang.Integer">
+      <column name="LIDD_IS_SAVE_WORD" >
+        <comment>WORD是否已保存</comment>
+      </column>
+    </property>
+    <property name="liddIsEntering" type="java.lang.Integer">
+      <column name="LIDD_IS_ENTERING" >
+        <comment>是否已录入数据</comment>
+      </column>
+    </property>
+    <property name="bcbEnumLiddSend" type="java.lang.Integer">
+      <column name="BCB_ENUM_LIDD_SEND" >
+        <comment>送达状态（枚举）</comment>
+      </column>
+    </property>
+    <property name="liddRemark" type="java.lang.String">
+      <column name="LIDD_REMARK" >
+        <comment>liddRemark</comment>
+      </column>
+    </property>
+    <property name="lbtmId" type="java.lang.String">
+      <column name="LBTM_ID" >
+        <comment>lbtmId</comment>
+      </column>
+    </property>
+    <property name="accountId" type="java.lang.String">
+      <column name="ACCOUNT_ID" >
+        <comment>accountId</comment>
+      </column>
+    </property>
+    <property name="onlineAppointId" type="java.lang.String">
+      <column name="ONLINE_APPOINT_ID" >
+        <comment>onlineAppointId</comment>
+      </column>
+    </property>
+    <property name="docType" type="java.lang.Short">
+      <column name="DOC_TYPE" >
+        <comment>docType</comment>
+      </column>
+    </property>
+    <property name="entName" type="java.lang.String">
+      <column name="ENT_NAME" >
+        <comment>entName</comment>
+      </column>
+    </property>
+    <property name="bizRange" type="java.lang.String">
+      <column name="BIZ_RANGE" >
+        <comment>bizRange</comment>
+      </column>
+    </property>
+    <property name="storageAddrProv" type="java.lang.String">
+      <column name="STORAGE_ADDR_PROV" >
+        <comment>storageAddrProv</comment>
+      </column>
+    </property>
+    <property name="storageAddrCity" type="java.lang.String">
+      <column name="STORAGE_ADDR_CITY" >
+        <comment>storageAddrCity</comment>
+      </column>
+    </property>
+    <property name="storageAddrCounty" type="java.lang.String">
+      <column name="STORAGE_ADDR_COUNTY" >
+        <comment>storageAddrCounty</comment>
+      </column>
+    </property>
+    <property name="storageAddrStreet" type="java.lang.String">
+      <column name="STORAGE_ADDR_STREET" >
+        <comment>storageAddrStreet</comment>
+      </column>
+    </property>
+    <property name="bizAddrAdc" type="java.lang.String">
+      <column name="BIZ_ADDR_ADC" >
+        <comment>bizAddrAdc</comment>
+      </column>
+    </property>
+    <property name="carryOnAddrCity" type="java.lang.String">
+      <column name="CARRY_ON_ADDR_CITY" >
+        <comment>carryOnAddrCity</comment>
+      </column>
+    </property>
+    <property name="carryOnAddrCounty" type="java.lang.String">
+      <column name="CARRY_ON_ADDR_COUNTY" >
+        <comment>carryOnAddrCounty</comment>
+      </column>
+    </property>
+    <property name="bizAddrStreet" type="java.lang.String">
+      <column name="BIZ_ADDR_STREET" >
+        <comment>bizAddrStreet</comment>
+      </column>
+    </property>
+    <property name="ecoType" type="java.lang.Short">
+      <column name="ECO_TYPE" >
+        <comment>ecoType</comment>
+      </column>
+    </property>
+    <property name="ecoTypeOther" type="java.lang.String">
+      <column name="ECO_TYPE_OTHER" >
+        <comment>ecoTypeOther</comment>
+      </column>
+    </property>
+    <property name="placeOwnership" type="java.lang.Short">
+      <column name="PLACE_OWNERSHIP" >
+        <comment>placeOwnership</comment>
+      </column>
+    </property>
+    <property name="tenancyBegin" type="java.sql.Date">
+      <column name="TENANCY_BEGIN" >
+        <comment>tenancyBegin</comment>
+      </column>
+    </property>
+    <property name="tenancyEnd" type="java.sql.Date">
+      <column name="TENANCY_END" >
+        <comment>tenancyEnd</comment>
+      </column>
+    </property>
+    <property name="picName" type="java.lang.String">
+      <column name="PIC_NAME" >
+        <comment>picName</comment>
+      </column>
+    </property>
+    <property name="picCidType" type="java.lang.Short">
+      <column name="PIC_CID_TYPE" >
+        <comment>picCidType</comment>
+      </column>
+    </property>
+    <property name="picCidNo" type="java.lang.String">
+      <column name="PIC_CID_NO" >
+        <comment>picCidNo</comment>
+      </column>
+    </property>
+    <property name="picCidAddrStreet" type="java.lang.String">
+      <column name="PIC_CID_ADDR_STREET" >
+        <comment>picCidAddrStreet</comment>
+      </column>
+    </property>
+    <property name="picAddrStreet" type="java.lang.String">
+      <column name="PIC_ADDR_STREET" >
+        <comment>picAddrStreet</comment>
+      </column>
+    </property>
+    <property name="specialGroupType" type="java.lang.Short">
+      <column name="SPECIAL_GROUP_TYPE" >
+        <comment>specialGroupType</comment>
+      </column>
+    </property>
+    <property name="specialGroupTypeOther" type="java.lang.String">
+      <column name="SPECIAL_GROUP_TYPE_OTHER" >
+        <comment>specialGroupTypeOther</comment>
+      </column>
+    </property>
+    <property name="linkName" type="java.lang.String">
+      <column name="LINK_NAME" >
+        <comment>linkName</comment>
+      </column>
+    </property>
+    <property name="lineTel" type="java.lang.String">
+      <column name="LINE_TEL" >
+        <comment>lineTel</comment>
+      </column>
+    </property>
+    <property name="agentName" type="java.lang.String">
+      <column name="AGENT_NAME" >
+        <comment>agentName</comment>
+      </column>
+    </property>
+    <property name="agentCidType" type="java.lang.Short">
+      <column name="AGENT_CID_TYPE" >
+        <comment>agentCidType</comment>
+      </column>
+    </property>
+    <property name="applyPersonPromise" type="java.lang.String">
+      <column name="APPLY_PERSON_PROMISE" >
+        <comment>applyPersonPromise</comment>
+      </column>
+    </property>
+    <property name="applyPersonSign" type="java.lang.String">
+      <column name="APPLY_PERSON_SIGN" >
+        <comment>applyPersonSign</comment>
+      </column>
+    </property>
+    <property name="applyPersonSignDate" type="java.lang.String">
+      <column name="APPLY_PERSON_SIGN_DATE" >
+        <comment>applyPersonSignDate</comment>
+      </column>
+    </property>
+    <property name="retailLicNo" type="java.lang.String">
+      <column name="RETAIL_LIC_NO" >
+        <comment>retailLicNo</comment>
+      </column>
+    </property>
+    <property name="retailLicLoseType" type="java.lang.Short">
+      <column name="RETAIL_LIC_LOSE_TYPE" >
+        <comment>retailLicLoseType</comment>
+      </column>
+    </property>
+    <property name="isLostLicenceCopy" type="java.lang.String">
+      <column name="IS_LOST_LICENCE_COPY" >
+        <comment>isLostLicenceCopy</comment>
+      </column>
+    </property>
+    <property name="retailLicLoseReason" type="java.lang.String">
+      <column name="RETAIL_LIC_LOSE_REASON" >
+        <comment>retailLicLoseReason</comment>
+      </column>
+    </property>
+    <property name="isDamageLicenceOrigi" type="java.lang.String">
+      <column name="IS_DAMAGE_LICENCE_ORIGI" >
+        <comment>isDamageLicenceOrigi</comment>
+      </column>
+    </property>
+    <property name="isDamageLicenceCopy" type="java.lang.String">
+      <column name="IS_DAMAGE_LICENCE_COPY" >
+        <comment>isDamageLicenceCopy</comment>
+      </column>
+    </property>
+    <property name="damageRemark" type="java.lang.String">
+      <column name="DAMAGE_REMARK" >
+        <comment>damageRemark</comment>
+      </column>
+    </property>
+    <property name="entNameIsChange" type="java.lang.Short">
+      <column name="ENT_NAME_IS_CHANGE" >
+        <comment>entNameIsChange</comment>
+      </column>
+    </property>
+    <property name="oldEntName" type="java.lang.String">
+      <column name="OLD_ENT_NAME" >
+        <comment>oldEntName</comment>
+      </column>
+    </property>
+    <property name="newEntName" type="java.lang.String">
+      <column name="NEW_ENT_NAME" >
+        <comment>newEntName</comment>
+      </column>
+    </property>
+    <property name="isChangeCompanyName" type="java.lang.String">
+      <column name="IS_CHANGE_COMPANY_NAME" >
+        <comment>isChangeCompanyName</comment>
+      </column>
+    </property>
+    <property name="oldCompanyName" type="java.lang.String">
+      <column name="OLD_COMPANY_NAME" >
+        <comment>oldCompanyName</comment>
+      </column>
+    </property>
+    <property name="newCompanyName" type="java.lang.String">
+      <column name="NEW_COMPANY_NAME" >
+        <comment>newCompanyName</comment>
+      </column>
+    </property>
+    <property name="picIsChange" type="java.lang.Short">
+      <column name="PIC_IS_CHANGE" >
+        <comment>picIsChange</comment>
+      </column>
+    </property>
+    <property name="oldPic" type="java.lang.String">
+      <column name="OLD_PIC" >
+        <comment>oldPic</comment>
+      </column>
+    </property>
+    <property name="newPic" type="java.lang.String">
+      <column name="NEW_PIC" >
+        <comment>newPic</comment>
+      </column>
+    </property>
+    <property name="bizAddrIsChange" type="java.lang.Short">
+      <column name="BIZ_ADDR_IS_CHANGE" >
+        <comment>bizAddrIsChange</comment>
+      </column>
+    </property>
+    <property name="oldBizAddrAdc" type="java.lang.String">
+      <column name="OLD_BIZ_ADDR_ADC" >
+        <comment>oldBizAddrAdc</comment>
+      </column>
+    </property>
+    <property name="newBizAddrAdc" type="java.lang.String">
+      <column name="NEW_BIZ_ADDR_ADC" >
+        <comment>newBizAddrAdc</comment>
+      </column>
+    </property>
+    <property name="applyCode" type="java.lang.String">
+      <column name="APPLY_CODE" >
+        <comment>applyCode</comment>
+      </column>
+    </property>
+    <property name="column1" type="java.lang.String">
+      <column name="COLUMN1" >
+        <comment>column1</comment>
+      </column>
+    </property>
+    <property name="column2" type="java.lang.String">
+      <column name="COLUMN2" >
+        <comment>column2</comment>
+      </column>
+    </property>
+    <property name="orgName" type="java.lang.String">
+      <column name="ORG_NAME">
+        <comment>组织名称</comment>
+      </column>
+    </property>
+       <property name="retailCidType" type="java.lang.Integer">
+      <column name="RETAIL_CID_TYPE">
+        <comment>发证机关</comment>
+      </column>
+    </property>
+       <property name="bizFormat" type="java.lang.Integer">
+      <column name="BIZ_FORMAT">
+        <comment>零售业态</comment>
+      </column>
+    </property>
+     <property name="areaType" type="java.lang.Integer">
+      <column name="AREA_TYPE">
+        <comment>地区类别</comment>
+      </column>
+    </property>
+      <property name="specialPersonGroup" type="java.lang.String">
+      <column name="SPECIAL_PERSON_GROUP">
+        <comment>特殊群体类别</comment>
+      </column>
+    </property>
+    <property name="contractPerson" type="java.lang.String">
+    	<column name="CONTRACT_PERSON">
+    		<comment>联系人</comment>
+    	</column>
+    </property>
+    <property name="retailTel" type="java.lang.String">
+      <column name="RETAIL_TEL">
+        <comment>联系人电话</comment>
+      </column>
+    </property>
+     <property name="busiMgrLicValidity" type="java.lang.String">
+      <column name="BUSI_MGR_LIC_VALIDITY">
+        <comment>特殊群体类别</comment>
+      </column>
+    </property>
+    <property name="resultStatus" type="java.lang.Integer">
+      <column name="RESULT_STATUS">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+    <property name="isChain" type="java.lang.String">
+    	<column name="IS_CHAIN">
+    		<comment>是否连锁</comment>
+    	</column>
+    </property>
+    <property name="isMain" type="java.lang.String">
+    	<column name="IS_MAIN">
+    		<comment>是否总店</comment>
+    	</column>
+    </property>
+    <property name="isBusiness" type="java.lang.String">
+    	<column name="IS_BUSINESS">
+    		<comment>总店是否经营</comment>
+    	</column>
+    </property>
+    <property name="oldLicNo" type="java.lang.String">
+    	<column name="OLD_LIC_NO">
+    		<comment>老许可证号</comment>
+    	</column>
+    </property>
+    <property name="agentIdcard" type="java.lang.String">
+    	<column name="AGENT_IDCARD">
+    		<comment>代理人身份证件号码</comment>
+    	</column>
+    </property>
+    <property name="firstAccrediDate" type="java.sql.Date">
+    	<column name="FIRST_ACCREDI_DATE">
+    		<comment>首次制证日期</comment>
+    	</column>
+    </property>
+    <property name="registeredCapital" type="java.lang.String">
+    	<column name="REGISTERED_CAPITAL">
+    		<comment>注册资本</comment>
+    	</column>
+    </property>
+    <property name="lastOperateCompleteTime" type="java.sql.Date">
+        <column name="LAST_OPERATE_COMPLETE_TIME">
+            <comment>最后办理业务完成时间</comment>
+        </column>
+    </property>
+    <!--许可证在办统计专用字段 -->
+        <property name="licNewAcceptCountAccept" type="java.lang.Integer">
+      <column name="licNewAcceptCountAccept">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+        <property name="licContinueCountAccept" type="java.lang.Integer">
+      <column name="licContinueCountAccept">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+        <property name="licChangeCountAccept" type="java.lang.Integer">
+      <column name="licChangeCountAccept">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+        <property name="licCloseCountAccept" type="java.lang.Integer">
+      <column name="licCloseCountAccept">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+        <property name="licRecoverBusinessCountAccept" type="java.lang.Integer">
+      <column name="licRecoverBusinessCountAccept">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+        <property name="licSupplementCountAccept" type="java.lang.Integer">
+      <column name="licSupplementCountAccept">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+        <property name="licRetiredCountAccept" type="java.lang.Integer">
+      <column name="licRetiredCountAccept">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+        <property name="licRecoverLogoutCountAccept" type="java.lang.Integer">
+      <column name="licRecoverLogoutCountAccept">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+        <property name="licOrderCloseCountAccept" type="java.lang.Integer">
+      <column name="licOrderCloseCountAccept">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+        <property name="licOrderRecoverCountAccept" type="java.lang.Integer">
+      <column name="licOrderRecoverCountAccept">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+        <property name="licApproveLogoutCountAccept" type="java.lang.Integer">
+      <column name="licApproveLogoutCountAccept">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+        <property name="licBackOutCountAccept" type="java.lang.Integer">
+      <column name="licBackOutCountAccept">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+        <property name="licRecallCountAccept" type="java.lang.Integer">
+      <column name="licRecallCountAccept">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+<!--     许可证办理统计 -->
+           <property name="newAcceptNoAcceptCount" type="java.lang.Integer">
+      <column name="newAcceptNoAcceptCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="newAcceptPassCount" type="java.lang.Integer">
+      <column name="newAcceptPassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="newAcceptNoPassCount" type="java.lang.Integer">
+      <column name="newAcceptNoPassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="continueNoAcceptCount" type="java.lang.Integer">
+      <column name="continueNoAcceptCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="continuePassCount" type="java.lang.Integer">
+      <column name="continuePassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="continueNoPassCount" type="java.lang.Integer">
+      <column name="continueNoPassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="changeNoAcceptCount" type="java.lang.Integer">
+      <column name="changeNoAcceptCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="changePassCount" type="java.lang.Integer">
+      <column name="changePassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>          <property name="changeNoPassCount" type="java.lang.Integer">
+      <column name="changeNoPassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="closeBusinessPassCount" type="java.lang.Integer">
+      <column name="closeBusinessPassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="closeBusinessNoPassCount" type="java.lang.Integer">
+      <column name="closeBusinessNoPassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="supplementPassCount" type="java.lang.Integer">
+      <column name="supplementPassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="supplementNoPassCount" type="java.lang.Integer">
+      <column name="supplementNoPassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="recoverBusinessPassCount" type="java.lang.Integer">
+      <column name="recoverBusinessPassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="recoverBusinessNoPassCount" type="java.lang.Integer">
+      <column name="recoverBusinessNoPassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="retiredPassCount" type="java.lang.Integer">
+      <column name="retiredPassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="retiredNoPassCount" type="java.lang.Integer">
+      <column name="retiredNoPassCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+              <property name="historyTotalCount" type="java.lang.Integer">
+      <column name="historyTotalCount">
+        <comment>办理结果</comment>
+      </column>
+    </property>
+    <!-- 许可证经营状态统计 by caobo -->
+    <property name="applicationOperating" type="java.lang.Integer">
+      <column name="ApplicationOperating">
+        <comment>初始申请</comment>
+      </column>
+    </property>
+    <property name="normalOperating" type="java.lang.Integer">
+      <column name="NormalOperating">
+        <comment>正常经营</comment>
+      </column>
+    </property>
+    <property name="closedOperating" type="java.lang.Integer">
+      <column name="ClosedOperating">
+        <comment>停业</comment>
+      </column>
+    </property>
+    <property name="closureOperating" type="java.lang.Integer">
+      <column name="ClosureOperating">
+        <comment>责令整顿停业</comment>
+      </column>
+    </property>
+    <property name="cancellationOperating" type="java.lang.Integer">
+      <column name="CancellationOperating">
+        <comment>注销</comment>
+      </column>
+    </property>
+<!-- 许可证分类统计 -->
+    <property name="stateOwnedCount" type="java.lang.Integer">
+      <column name="stateOwnedCount">
+        <comment>国有</comment>
+      </column>
+    </property>
+    <property name="collectiveCount" type="java.lang.Integer">
+      <column name="collectiveCount">
+        <comment>集体</comment>
+      </column>
+    </property>
+    <property name="unitCount" type="java.lang.Integer">
+      <column name="unitCount">
+        <comment>个人</comment>
+      </column>
+    </property>
+    <property name="partnershipCount" type="java.lang.Integer">
+      <column name="partnershipCount">
+        <comment>合伙</comment>
+      </column>
+    </property>
+    <property name="shareholdingCount" type="java.lang.Integer">
+      <column name="shareholdingCount">
+        <comment>股份制（合作）</comment>
+      </column>
+    </property>
+    <property name="investmentCount" type="java.lang.Integer">
+      <column name="investmentCount">
+        <comment>个人独资</comment>
+      </column>
+    </property>
+    <property name="limitedLiabilityCount" type="java.lang.Integer">
+      <column name="limitedLiabilityCount">
+        <comment>有限责任</comment>
+      </column>
+    </property>
+    <property name="foreignInvestmentCount" type="java.lang.Integer">
+      <column name="foreignInvestmentCount">
+        <comment>外商投资</comment>
+      </column>
+    </property>
+    <property name="limitedLiabilityCompanyCount" type="java.lang.Integer">
+      <column name="limitedLiabilityCompanyCount">
+        <comment>股份有限公司</comment>
+      </column>
+    </property>
+    <property name="othersCount" type="java.lang.Integer">
+      <column name="othersCount">
+        <comment>其他</comment>
+      </column>
+    </property>
+      <property name="clsssifyTotalCount" type="java.lang.Integer">
+      <column name="clsssifyTotalCount">
+        <comment>总数</comment>
+      </column>
+    </property>
+    <property name="applicationAndNormal" type="java.lang.Integer">
+      <column name="ApplicationAndNormal">
+        <comment>初始申请和正常营业</comment>
+      </column>
+    </property>
+    <property name="closedAndClosure" type="java.lang.Integer">
+      <column name="ClosedAndClosure">
+        <comment>停业和责令停业</comment>
+      </column>
+    </property>
+    <property name="totalOperating" type="java.lang.Integer">
+      <column name="TotalOperating">
+        <comment>总数</comment>
+      </column>
+    </property>
+    <property name="orgUuid" type="java.lang.String">
+      <column name="ORG_UUID">
+        <comment>组织结构主键</comment>
+      </column>
+    </property>
+    <!-- 许可证注销统计 by caobo -->
+    <property name="total" type="java.lang.Integer">
+      <column name="Total">
+        <comment>总数</comment>
+      </column>
+    </property>
+    <property name="gooutofbusiness" type="java.lang.Integer">
+      <column name="Gooutofbusiness">
+        <comment>歇业</comment>
+      </column>
+    </property>
+    <property name="withdraw" type="java.lang.Integer">
+      <column name="Withdraw">
+        <comment>撤回</comment>
+      </column>
+    </property>
+    <property name="revoke" type="java.lang.Integer">
+      <column name="Revoke">
+        <comment>撤销</comment>
+      </column>
+    </property>
+    <property name="licenseexpires" type="java.lang.Integer">
+      <column name="Licenseexpires">
+        <comment>许可证到期</comment>
+      </column>
+    </property>
+    <property name="cancelqualification" type="java.lang.Integer">
+      <column name="Cancelqualification">
+        <comment>取消经营资格</comment>
+      </column>
+    </property>
+    <property name="orderchangesare" type="java.lang.Integer">
+      <column name="Orderchangesare">
+        <comment>责令变更超期</comment>
+      </column>
+    </property>
+    <property name="expired" type="java.lang.Integer">
+      <column name="Expired">
+        <comment>停业到期</comment>
+      </column>
+    </property>
+    <property name="longtermoperation" type="java.lang.Integer">
+      <column name="Longtermoperation">
+        <comment>长期未经营</comment>
+      </column>
+    </property>
+    <property name="newmanagement" type="java.lang.Integer">
+      <column name="Newmanagement">
+        <comment>新办证未经营</comment>
+      </column>
+    </property>
+    <property name="other" type="java.lang.Integer">
+      <column name="Other">
+        <comment>其他</comment>
+      </column>
+    </property>
+    <property name="unitCode" type="java.lang.String">
+      <column name="UNIT_CODE">
+        <comment>ORG_SEQ_CODE</comment>
+      </column>
+    </property>
+    <!-- 许可证办理时限统计 -->
+    <property name="xb1" type="java.lang.Integer">
+      <column name="XB1">
+        <comment>新办平均办理时长</comment>
+      </column>
+    </property>
+    <property name="xb2" type="java.lang.Integer">
+      <column name="XB2">
+        <comment>新办延期办理次数</comment>
+      </column>
+    </property>
+    <property name="xb3" type="java.lang.Integer">
+      <column name="XB3">
+        <comment>新办平均延期时长</comment>
+      </column>
+    </property>
+    <property name="xb4" type="java.lang.Integer">
+      <column name="XB4">
+        <comment>新办逾期办理次数</comment>
+      </column>
+    </property>
+    <property name="xb5" type="java.lang.Integer">
+      <column name="XB5">
+        <comment>新办平均逾期时长</comment>
+      </column>
+    </property>
+    <property name="yx1" type="java.lang.Integer">
+      <column name="YX1">
+        <comment>延续平均办理时长</comment>
+      </column>
+    </property>
+    <property name="yx2" type="java.lang.Integer">
+      <column name="YX2">
+        <comment>延续延期办理次数</comment>
+      </column>
+    </property>
+    <property name="yx3" type="java.lang.Integer">
+      <column name="YX3">
+        <comment>延续平均延期时长</comment>
+      </column>
+    </property>
+    <property name="yx4" type="java.lang.Integer">
+      <column name="YX4">
+        <comment>延续逾期办理次数</comment>
+      </column>
+    </property>
+    <property name="yx5" type="java.lang.Integer">
+      <column name="YX5">
+        <comment>延续平均逾期时长</comment>
+      </column>
+    </property>
+    <property name="bg1" type="java.lang.Integer">
+      <column name="BG1">
+        <comment>变更平均办理时长</comment>
+      </column>
+    </property>
+    <property name="bg2" type="java.lang.Integer">
+      <column name="BG2">
+        <comment>变更延期办理次数</comment>
+      </column>
+    </property>
+    <property name="bg3" type="java.lang.Integer">
+      <column name="BG3">
+        <comment>变更平均延期时长</comment>
+      </column>
+    </property>
+    <property name="bg4" type="java.lang.Integer">
+      <column name="BG4">
+        <comment>变更逾期办理次数</comment>
+      </column>
+    </property>
+    <property name="bg5" type="java.lang.Integer">
+      <column name="BG5">
+        <comment>变更平均逾期时长</comment>
+      </column>
+    </property>
+    <property name="orgSeqCode" type="java.lang.String">
+      <column name="ORG_SEQ_CODE">
+        <comment>单位编码</comment>
+      </column>
+    </property>
+        <property name="orgRank" type="java.lang.Integer">
+      <column name="ORG_RANK">
+        <comment>行政级别</comment>
+      </column>
+    </property>
+    
+    <property name="cityCount" type="java.lang.Integer">
+      <column name="cityCount">
+        <comment>城镇统计</comment>
+      </column>
+    </property>
+          <property name="townCount" type="java.lang.Integer">
+      <column name="townCount">
+        <comment>乡村统计</comment>
+      </column>
+    </property>
+          <property name="freeCount" type="java.lang.Integer">
+      <column name="freeCount">
+        <comment>自有统计</comment>
+      </column>
+    </property>
+          <property name="rentCount" type="java.lang.Integer">
+      <column name="rentCount">
+        <comment>租赁统计</comment>
+      </column>
+    </property>
+     <property name="gratisCount" type="java.lang.Integer">
+      <column name="gratisCount">
+        <comment>无偿经营统计</comment>
+      </column>
+    </property>
+          <property name="groceryCount" type="java.lang.Integer">
+      <column name="groceryCount">
+        <comment>食杂店统计</comment>
+      </column>
+    </property>
+          <property name="dimeStoreCount" type="java.lang.Integer">
+      <column name="dimeStoreCount">
+        <comment>便利店统计</comment>
+      </column>
+    </property>
+          <property name="supermarketCount" type="java.lang.Integer">
+      <column name="supermarketCount">
+        <comment>超市统计</comment>
+      </column>
+    </property>
+          <property name="marketplaceCount" type="java.lang.Integer">
+      <column name="marketplaceCount">
+        <comment>商场统计</comment>
+      </column>
+    </property>
+          <property name="tobaccoAndWineCount" type="java.lang.Integer">
+      <column name="tobaccoAndWineCount">
+        <comment>烟酒商店</comment>
+      </column>
+    </property>
+          <property name="recreationCount" type="java.lang.Integer">
+      <column name="recreationCount">
+        <comment>娱乐服务类</comment>
+      </column>
+    </property>      
+    <property name="bizOthersCount" type="java.lang.Integer">
+      <column name="bizOthersCount">
+        <comment>业态-其他-统计</comment>
+      </column>
+    </property>
+        <property name="atFristValidLicCount" type="java.lang.Integer">
+      <column name="atFristValidLicCount">
+        <comment>期初有效证件数</comment>
+      </column>
+    </property>
+    <property name="atLastValidLicCount" type="java.lang.Integer">
+      <column name="atLastValidLicCount">
+        <comment>期末有效证件数</comment>
+      </column>
+    </property>
+    <property name="currentPeriodNewCount" type="java.lang.Integer">
+      <column name="currentPeriodNewCount">
+        <comment>本期新办证件数</comment>
+      </column>
+    </property>
+    <property name="currentPeriodLogoutCount" type="java.lang.Integer">
+      <column name="currentPeriodLogoutCount">
+        <comment>本期注销证件数</comment>
+      </column>
+    </property>
+    <property name="currentDate" type="java.lang.String">
+      <column name="currentDate">
+        <comment>系统当前时间戳</comment>
+      </column>
+    </property>
+     <property name="defaultDataStart" type="java.lang.String">
+      <column name="defaultDataStart">
+        <comment>默认统计区间开始日期</comment>
+      </column>
+    </property>
+     <property name="defaultDataEnd" type="java.lang.String">
+      <column name="defaultDataEnd">
+        <comment>默认统计区间结束日期</comment>
+      </column>
+    </property>
+       <property name="retailCidNo" type="java.lang.String">
+      <column name="RETAIL_CID_NO">
+        <comment>身份证号码</comment>
+      </column>
+    </property>
+       <property name="retailCidAddress" type="java.lang.String">
+      <column name="RETAIL_CID_ADDRESS">
+        <comment>身份证住址</comment>
+      </column>
+    </property>
+       <property name="retailAddress" type="java.lang.String">
+      <column name="RETAIL_ADDRESS">
+        <comment>现住址</comment>
+      </column>
+    </property>
+     <property name="isProcessComplete" type="java.lang.String">
+      <column name="IS_PROCESS_COMPLETE">
+        <comment>流程状态</comment>
+      </column>
+    </property>
+    <property name="applicantPhoto" type="java.lang.String">
+      <column name="APPLICANT_PHOTO">
+        <comment>负责人头像地址</comment>
+      </column>
+    </property>
+    <property name="bizArea" type="java.lang.Double">
+      <column name="BIZ_AREA" precision="10">
+        <comment>经营面积</comment>
+      </column>
+    </property>
+    <property name="backlogOrderNum" type="java.lang.Integer">
+      <column name="backlogOrderNum">
+        <comment>待办预约数</comment>
+      </column>
+    </property>
+    <property name="longTimeOrderNum" type="java.lang.Integer">
+      <column name="longTimeOrderNum">
+        <comment>长期未办理预约数</comment>
+      </column>
+    </property>
+    <property name="totalOrderNum" type="java.lang.Integer">
+      <column name="totalOrderNum">
+        <comment>总预约数</comment>
+      </column>
+    </property>
+    <property name="newAddOrderNum" type="java.lang.Integer">
+      <column name="newAddOrderNum">
+        <comment>新增预约数</comment>
+      </column>
+    </property>
+    <property name="acceptOrderNum" type="java.lang.Integer">
+      <column name="acceptOrderNum">
+        <comment>办理预约数</comment>
+      </column>
+    </property>
+    <property name="bookingId" type="java.lang.Integer">
+      <column name="BOOKING_ID">
+        <comment>预约号</comment>
+      </column>
+    </property>
+    <property name="bookingTime" type="java.sql.Timestamp">
+      <column name="BOOKING_TIME">
+        <comment>预约时间</comment>
+      </column>
+    </property>
+    <property name="linkApplyMainUuid" type="java.lang.String">
+      <column name="LINK_APPLY_MAIN_UUID">
+        <comment>预约表与主表pk关联字段</comment>
+      </column>
+    </property>
+    <property name="isUsed" type="java.lang.String">
+      <column name="IS_USED">
+        <comment>预约表是否已使用</comment>
+      </column>
+    </property>
+    <property name="infTimestamp" type="java.sql.Timestamp">
+      <column name="INF_TIMESTAMP">
+        <comment>最后修改时间</comment>
+      </column>
+    </property>
+    <property name="createTime" type="java.sql.Timestamp">
+      <column name="CREATE_TIME">
+        <comment>创建时间</comment>
+      </column>
+    </property>
+    <property name="acceptFileNum" type="java.lang.Integer">
+      <column name="ACCEPT_FILE_NUM">
+        <comment>已办文书数量</comment>
+      </column>
+    </property>
+    <property name="approveTime" type="java.sql.Timestamp">
+      <column name="APPROVE_TIME">
+        <comment>审批日期</comment>
+      </column>
+    </property>
+    <property name="licNo" type="java.lang.String">
+    	<column name="LIC_NO">
+    		<comment>许可证号</comment>
+    	</column>
+    </property>
+    
+     <property name="licNoTemp" type="java.lang.String">
+    	<column name="LIC_NO_TEMP">
+    		<comment>查询使用许可证号</comment>
+    	</column>
+    </property>
+    <property name="gridDing" type="java.lang.String">
+    	<column name="GRIDDING">
+    		<comment>所属网格编码</comment>
+    	</column>
+    </property>
+    <property name="gridName" type="java.lang.String">
+    	<column name="GRID_NAME">
+    		<comment>所属网格</comment>
+    	</column>
+    </property>
+  </class>
+</model-mapping>

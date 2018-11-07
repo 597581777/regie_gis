@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE bizframework-dict PUBLIC "-//BizFramework/bizframework dict DTD 4.2//EN" "http://www.chinasofti.com/bizframework-dict.dtd">
+<bizframework-dict>
+	<!--  组织名称字典定义示例（数据字典详细说明参考《ResourceOne BizFoundation基础开发平台5.0开发指南》）
+	方式1：sql定义数据字典
+		cache：是否缓存
+		expiration：缓存失效时间，单位为秒，默认为-1表示缓存永久有效
+		:parentorguuid为页面请求传递的参数，如果需要传递参数，请参照此示例使用命名参数，不支持?方式。
+		说明：参数名称不能定义为 :id，eg：where orguuid = :id 是非法的。
+	<dict id="orgName" cache="true 或者 false" expiration="-1">
+		<sql>select cnname as name,orguuid as value from ro_org where parentorguuid = :parentorguuid </sql>
+	</dict>
+	
+	方式2：xml定义数据字典
+	<dict id="code">
+		<datas>
+			<data>
+				<property name="name" value="男"/>
+				<property name="value" value="0"/>
+			</data>
+			<data>
+				<property name="name" value="女"/>
+				<property name="value" value="1"/>
+			</data>
+		</datas>
+	</dict>
+	-->
+	
+</bizframework-dict>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Component Id="402894835c99e9a1015c9a21fc0d082c" Name="licquery">
+  <Version>1.0.0</Version>
+  <code>licquery</code>
+  <Mark>许可证查询</Mark>
+  <Description></Description>
+  <NavigatorEntrance></NavigatorEntrance>
+  <ComplexAttribute Name="packageAndFolder">
+    <Package/>
+    <Folder/>
+  </ComplexAttribute>
+  <ComplexAttribute Name="objectRelation"/>
+  <ComplexAttribute Name="requirement"/>
+  <ComplexAttribute Name="humanProcess"/>
+  <ComplexAttribute Name="interface"/>
+  <ComplexAttribute Name="coverRequire"/>
+  <ComplexAttribute Name="designData"/>
+</Component>

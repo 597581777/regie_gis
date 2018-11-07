@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<logger:configuration xmlns:logger="http://www.icss.com/log/">
+	<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+		<layout class="com.chinasofti.ro.bizframework.modules.audit.core.AuditorLayout">
+			<param name="ConversionPattern"
+				value="%d{DATE} --$TYPE$ %p [$ACTOR$]  $SOURCE$ $MESSAGE$ %n" />
+		</layout>
+	</appender>
+	<!-- JDBC appender requires JDBC driver.The configuration should be updated by user according to local setting. -->
+	<appender name="JDBC_Appender"
+		class="com.chinasofti.ro.bizframework.modules.audit.appender.AuditorJDBCAppender">
+		<!--<param name="TableName" value="RO_AUDIT" /> -->
+		<!--<param name="fieldName" value="ACT_ID" />-->
+		<!--<param name="Sql"
+			value=" insert into RO_AUDIT (ACT_ID,ACTOR, USERID,PERSONUUID, ORGNAME,ORGUUID,ENROLLED_ORG, ENROLLED_ORGUUID, ACCOUNTTYPE,ACT_RESULT,ACT_ACTION,ACT_CODE,ACT_ITEM_NUM,ACT_ITEM_CODE,ACT_OBJ, ACT_TIME, ACT_MESSAGE, ACT_IP) values (#P,'$ACTOR$','$USERID$','$PERSONUUID$','$ORGNAME$','$ORGUUID$', '$ENROLLED_ORG$','$ENROLLED_ORGUUID$',$ACCOUNTTYPE$,$RESULT$,'$ACTION$','$ACTCODE$', $ITEMNUM$,'$ITEMCODE$','$OBJECT$', %d{LONGDATE}, '#$MESSAGE$#','$IP$')" />-->
+		<param name="Driver" value="com.mysql.jdbc.Driver" />
+		<param name="URL" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf-8" />
+		<param name="User" value="root" />
+		<param name="Password" value="123456" />
+	</appender>
+	
+	<appender name="POOL_Appender"
+		class="com.chinasofti.ro.bizframework.modules.audit.appender.AuditorPoolAppender" >
+		<!-- <param name="TableName" value="RO_AUDIT" /> -->
+		<!--<param name="fieldName" value="ACT_ID" />-->
+		<!--<param name="Sql"
+			value=" insert into RO_AUDIT (ACT_ID,ACTOR, USERID,PERSONUUID, ORGNAME,ORGUUID,ENROLLED_ORG, ENROLLED_ORGUUID, ACCOUNTTYPE,ACT_RESULT,ACT_ACTION,ACT_CODE,ACT_ITEM_NUM,ACT_ITEM_CODE,ACT_OBJ, ACT_TIME, ACT_MESSAGE,ACT_IP ) values (#P,'$ACTOR$','$USERID$','$PERSONUUID$','$ORGNAME$','$ORGUUID$', '$ENROLLED_ORG$','$ENROLLED_ORGUUID$',$ACCOUNTTYPE$,$RESULT$,'$ACTION$','$ACTCODE$', $ITEMNUM$,'$ITEMCODE$','$OBJECT$', %d{LONGDATE}, '#$MESSAGE$#','$IP$')" />-->
+	</appender>
+		
+	<!-- 异步Appender，此Appender会重新开启一个线程记录行为审核，不影响主线程的执行 -->
+	<appender name="POOL_Ansc_Appender"
+		class="com.chinasofti.ro.bizframework.modules.audit.appender.AuditorAsynPoolAppender" >
+		<!--<param name="TableName" value="RO_AUDIT" /> -->
+		<!--<param name="fieldName" value="ACT_ID" />-->
+		<!--<param name="Sql"
+			value=" insert into RO_AUDIT (ACT_ID,ACTOR, USERID,PERSONUUID, ORGNAME,ORGUUID,ENROLLED_ORG, ENROLLED_ORGUUID, ACCOUNTTYPE,ACT_RESULT,ACT_ACTION,ACT_CODE,ACT_ITEM_NUM,ACT_ITEM_CODE,ACT_OBJ, ACT_TIME, ACT_MESSAGE, ACT_IP) values (#P,'$ACTOR$','$USERID$','$PERSONUUID$','$ORGNAME$','$ORGUUID$', '$ENROLLED_ORG$','$ENROLLED_ORGUUID$',$ACCOUNTTYPE$,$RESULT$,'$ACTION$','$ACTCODE$', $ITEMNUM$,'$ITEMCODE$','$OBJECT$', %d{LONGDATE}, '#$MESSAGE$#','$IP$')" />-->
+	</appender>
+
+	<!-- default system based logging configuration -->
+	<auditor name="defaultAuditor" additivity="false">
+		<enable value="true" />
+		<appender-ref ref="POOL_Ansc_Appender" />
+	</auditor>
+	
+	<!-- 
+	<auditor name="com.icss" additivity="false">
+		<enable value="true" />
+		<appender-ref ref="POOL_Appender" />
+	</auditor>
+	-->
+	
+</logger:configuration>

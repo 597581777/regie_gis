@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd">
+    
+    <!-- J2EE环境下的JNDI数据源 -->
+    <jee:jndi-lookup id="dataSource" jndi-name="${db.jndi.name}"/>
+    <jee:jndi-lookup id="dataSource_rone" jndi-name="${db.jndi.name_rone}"/>
+    
+  	<!-- <bean id="dao" class="com.chinasofti.ro.bizframework.core.orm.DAO"  >
+        <property name="dataSource">
+				<ref bean="dataSource"/>
+		</property>
+	 </bean> -->
+	 
+	<!-- JMS数据源
+    <jee:jndi-lookup id="queueConnectionFactory" jndi-name="${jms.jndi.name}"/>
+    -->
+        
+    <!--  C3P0 数据源（推荐） ，连接池具体配置请参考C3P0文档
+   	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${database.driver_class}" />
+		<property name="jdbcUrl" value="${database.url}" />
+		<property name="user" value="${database.username}" />
+		<property name="password" value="${database.password}" />
+	</bean>
+    -->
+    
+    <!-- Apache DBCP 数据源
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${database.driver_class}" />
+		<property name="url" value="${database.url}" />
+		<property name="username" value="${database.username}" />
+		<property name="password" value="${database.password}" />
+	</bean>
+    -->
+    
+    <!-- 数据源监控  请将实际数据源的id="dataSource"改成id="dataSourceReal"后增加下面的配置
+    <bean id="dataSource" class="com.chinasofti.ro.bizframework.modules.dsmonitor.BizDataSource"
+		autowire="byName">
+		<property name="dataSource">
+			<ref bean="dataSourceReal" />
+		</property>
+	</bean>
+	-->
+    
+    <!-- ********************************************* 定义任务调度 ************************************************************ -->
+    <!-- 要调用的工作类(普通的java类，需要定时工作的任务写到这个类里面，通过此配置可以将任何一个java类当作job定时执行) -->
+	<!-- <bean id="quartzJob" class="com.chinasofti.ro.bizframework.core.quartz.QuartzJob" /> -->
+	
+	<!-- 定义调用对象和调用对象的方法(jobDetail) -->
+	<!-- bean id="jobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"-->
+		<!-- 注册定时任务执行时调用的类 -->
+		<!--<property name="targetObject" ref="quartzJob" />-->
+		<!-- 注册定时任务执行时调用的方法 -->
+		<!-- <property name="targetMethod" value="job" /> -->
+		<!-- 此参数为false等于JobDetail对象实现了Stateful接口，jobs不会并发运行-->
+		<!-- <property name="concurrent" value="false" /> -->
+	<!--/bean-->
+	
+	<!-- 定义触发时间(simpleTrigger) -->
+	<!--
+	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="jobtask" />
+		<property name="startDelay" value="10000" />
+		<property name="repeatInterval" value="50000" />
+	</bean>
+	-->
+
+	<!-- 定义触发时间(cronTrigger) -->
+	<!-- 
+		cron表达式:Seconds Minutes Hours DayofMonth Month DayofWeek
+		说明:
+			Seconds:可出现,-  *  / 四个字符,有效范围为0-59的整数.
+			Minutes:可出现,-  *  / 四个字符,有效范围为0-59的整数.
+			Hours:可出现,-  *  / 四个字符,有效范围为0-23的整数.
+			DayofMonth:可出现,-  *  / ? L W C八个字符,有效范围为0-31的整数.
+			Month:可出现,-  *  / 四个字符,有效范围为1-12的整数或JAN-DEc.
+			DayofWeek:可出现,-  *  / ? L C #四个字符,有效范围为1-7的整数或SUN-SAT两个范围。1表示星期天，2表示星期一,依次类推.
+			Year:可出现,-  *  / 四个字符,有效范围为1970-2099年.
+			
+			*:表示匹配该域的任意值,假如在Minutes域使用*,即表示每分钟都会触发事件.
+			?:只能用在DayofMonth和DayofWeek两个域.它也匹配域的任意值.
+			-:表示范围,例如在Minutes域使用5-20,表示从5分到20分钟每分钟触发一次.
+			/:表示起始时间开始触发，然后每隔固定时间触发一次.例如在秒字段中“5/15”代表从第 5 秒开始,每 15 秒一次.
+			L:表示最后,只能出现在DayofWeek和DayofMonth域,如果在DayofWeek域使用5L,意味着在最后的一个星期四触发.
+			W:表示有效工作日(周一到周五),只能出现在DayofMonth域,系统将在离指定日期的最近的有效工作日触发事件.
+			例如:在DayofMonth使用5W,如果5日是星期六,则将在最近的工作日:星期五,即4日触发.如果5日是星期天,则在6日触发;
+			如果5日在星期一到星期五中的一天,则就在5日触发.另外一点:W的最近寻找不会跨过月份.
+			LW:这两个字符可以连用,表示在某个月最后一个工作日,即最后一个星期五.
+			#:用于确定每个月第几个星期几,只能出现在DayofMonth域.例如在4#2,表示某月的第二个星期三.
+			
+			这里一定要注意Month DayofWeek,这两个字段可能是互斥的，如果其中一个指定了具体的值（包括*），则另外一个
+			就不能再用*，必须用?
+			
+		举例:
+			"0 0 12 * * ? "			每天12点运行
+			"0 15 10 ? * *"			每天10:15运行
+			"0 15 10 * * ?"			每天10:15运行
+			"0 15 10 * * ? *"		每天10:15运行
+			"0 15 10 * * ? 2008"	在2008年的每天10：15运行
+			"0 * 14 * * ?"			每天14点到15点之间每分钟运行一次，开始于14:00，结束于14:59
+			"0 0/5 14 * * ?"		每天14点到15点每5分钟运行一次，开始于14:00，结束于14:55
+			"0 15 10 ? * MON-FRI"	每周一，二，三，四，五的10:15分运行
+			"0 15 10 L * ?"			每月最后一天10:15分运行
+			"0 15 10 ? * 6L"		每月最后一个星期五10:15分运行
+			
+			10,15,20,25 * * * * ?	每分钟的第10秒开始，然后间隔5秒执行一次，一直到这一分钟的第25秒停止
+	-->
+	<!--	这个cron表示 每分钟的第5秒开始，然后间隔5秒执行一次，一直到这一分钟的第55秒停止
+	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="jobtask" />
+		<property name="cronExpression" value="5,10,15,20,25,30,35,40,45,50,55 * * * * ?" />
+	</bean>
+	-->
+	
+	<!-- 
+		1.如果将lazy-init='false'那么容器启动就会执行调度程序
+		2.Autowire一定等于no,否则会传入一个DataSource/SessionFactory给Scheduler，
+			Scheduler就会认为是许要持久化任务执行情况，而其实你是JVM形式执行的，就会报没有建立Quartz持久化表，
+			Table or View not Found
+	-->
+	<!--bean id="startQuartz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean"-->
+	<!--property name="triggers"-->
+		<!--list-->
+			<!-- 需要将使用的Trigger注册在这里 -->
+			<!-- <ref bean="simpleTrigger"/>-->
+			<!-- <ref bean="cronTrigger"/> -->
+		<!--/list-->  
+	<!--/property-->
+	<!--/bean-->
+	
+	<!-- 带管理界面的计划任务 
+		quartzTableCreator的两个constructor-arg的含义：
+		constructor-arg index="0" - quartz表名的前缀，要和quartz.properties中的匹配
+		constructor-arg index="1" - 是否自动创建表
+		
+	<bean name="quartzTableCreator"
+		class="com.chinasofti.ro.bizframework.modules.schedule.QuartzTableCreator"
+		autowire="byName" >
+		<constructor-arg index="0" type="java.lang.String" value="qrtz" />
+		<constructor-arg index="1" type="boolean" value="true" />
+	</bean>
+	<bean id="quartzScheduler"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean"
+		depends-on="quartzTableCreator">
+		<property name="jobFactory">
+			<bean class="org.springframework.scheduling.quartz.SpringBeanJobFactory" />
+		</property>
+		<property name="configLocation" value="classpath:quartz.properties" />
+		<property name="waitForJobsToCompleteOnShutdown" value="true" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean name="scheduleManagementService"
+		class="com.chinasofti.ro.bizframework.modules.schedule.ScheduleManagementServiceImpl"
+		autowire="byName" />
+		-->
+</beans>

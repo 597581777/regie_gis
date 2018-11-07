@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE model-mapping PUBLIC "-//ResourceOne/Model Mapping DTD 5.0//EN" "http://www.chinasofti.com/model-mapping-5.0.dtd">
+
+<model-mapping>
+  <class name="com.icss.regiegis.common.model.Employee" table="T_TM_EMPLOYEE_BASE_INFO">
+    <comment>员工基础信息</comment>
+    <sql id="getTree" type="default">
+    	<![CDATA[
+			SELECT 'root' AS P_ID, RTRIM(A.ORG_SEQ_CODE) AS ID, ORG_NAME AS NAME,
+				CASE WHEN B.NUM>0 THEN 'true' ELSE 'false' END IS_PARENT,
+				CASE WHEN B.NUM>0 THEN 'true' ELSE 'false' END NOCHECK
+			FROM T_TM_ORG_BASE_INFO A
+			LEFT JOIN 
+			(
+			 	 SELECT LEFT(RTRIM(ORG_SEQ_CODE),LENGTH(RTRIM(ORG_SEQ_CODE))-2) ORG_SEQ_CODE,COUNT(1) NUM
+				 FROM T_TM_ORG_BASE_INFO A
+				 WHERE 1=1 AND A.EFFECTIVE_STATUS = 1 AND LEFT(RTRIM(ORG_SEQ_CODE),LENGTH(RTRIM(ORG_SEQ_CODE))-2) IN (SELECT RTRIM(ORG_SEQ_CODE) FROM T_TM_ORG_BASE_INFO WHERE RTRIM(ORG_SEQ_CODE) =:tarEnt)
+				 #if(${onlyUnit}) AND A.ORG_TYPE=:onlyUnit #end 
+				 GROUP BY LEFT(RTRIM(ORG_SEQ_CODE),LENGTH(RTRIM(ORG_SEQ_CODE))-2)
+			) B ON RTRIM(A.ORG_SEQ_CODE)=B.ORG_SEQ_CODE AND A.EFFECTIVE_STATUS = 1
+			WHERE RTRIM(A.ORG_SEQ_CODE) = :tarEnt
+			#if(${onlyUnit}) AND A.ORG_TYPE=:onlyUnit #end 
+		]]>
+	</sql>
+	<sql id="getTreeChild" type="default">
+    	<![CDATA[
+			SELECT LEFT(RTRIM(A.ORG_SEQ_CODE),LENGTH(RTRIM(A.ORG_SEQ_CODE))-2) AS P_ID, RTRIM(A.ORG_SEQ_CODE) AS ID, ORG_NAME AS NAME,
+		   		CASE WHEN B.NUM>0 THEN 'true' ELSE 'false' END IS_PARENT,
+				CASE WHEN B.NUM>0 THEN 'true' ELSE 'false' END NOCHECK
+			FROM T_TM_ORG_BASE_INFO A
+			LEFT JOIN 
+			(
+			 	 SELECT LEFT(RTRIM(ORG_SEQ_CODE),LENGTH(RTRIM(ORG_SEQ_CODE))-2) ORG_SEQ_CODE,COUNT(1) NUM
+				 FROM T_TM_ORG_BASE_INFO A
+				 WHERE 1=1 AND A.EFFECTIVE_STATUS = 1 AND LEFT(RTRIM(ORG_SEQ_CODE),LENGTH(RTRIM(ORG_SEQ_CODE))-2) IN (SELECT RTRIM(ORG_SEQ_CODE) FROM T_TM_ORG_BASE_INFO WHERE LEFT(RTRIM(ORG_SEQ_CODE),LENGTH(RTRIM(ORG_SEQ_CODE))-2) = :id)
+				 #if(${onlyUnit}) AND A.ORG_TYPE=:onlyUnit #end 
+				 GROUP BY LEFT(RTRIM(ORG_SEQ_CODE),LENGTH(RTRIM(ORG_SEQ_CODE))-2)
+			) B ON RTRIM(A.ORG_SEQ_CODE)=B.ORG_SEQ_CODE AND A.EFFECTIVE_STATUS = 1
+			WHERE LEFT(RTRIM(A.ORG_SEQ_CODE),LENGTH(RTRIM(A.ORG_SEQ_CODE))-2) = :id
+			#if(${onlyUnit}) AND A.ORG_TYPE=:onlyUnit #end
+		]]>
+	</sql>
+	<sql id="getTreeAll" type="default">
+    	<![CDATA[
+			SELECT CASE WHEN LEFT(RTRIM(A.ORG_SEQ_CODE),
+				LENGTH(RTRIM(A.ORG_SEQ_CODE))-2)='' THEN 'root' ELSE LEFT(RTRIM(A.ORG_SEQ_CODE),LENGTH(RTRIM(A.ORG_SEQ_CODE))-2) END AS P_ID,
+	   			RTRIM(A.ORG_SEQ_CODE) AS ID, ORG_NAME AS NAME,
+	   			CASE WHEN A.ORG_TYPE = 1 THEN 'true' ELSE 'false' END NOCHECK
+			FROM T_TM_ORG_BASE_INFO A
+			WHERE 1=1 AND A.EFFECTIVE_STATUS = 1 AND RTRIM(A.ORG_SEQ_CODE) like ${sqlUtil.like(":tarEnt")}
+			#if(${onlyUnit}) AND A.ORG_TYPE=:onlyUnit #end
+		]]>
+	</sql>
+	<sql id="getTreeAllEmployee" type="default">
+    	<![CDATA[
+			SELECT '' AS P_ID, RTRIM(A.EMPLOYEE_UUID) AS ID, EMPLOYEE_NAME AS NAME,
+		   		'false' IS_PARENT,'false' NOCHECK
+			FROM T_TM_EMPLOYEE_BASE_INFO A
+			LEFT JOIN T_TM_ORG_BASE_INFO D ON A.EMPLOYEE_DEPT=D.ORG_UUID AND A.EFFECTIVE_STATUS = 1
+			WHERE D.ORG_SEQ_CODE = :id
+			ORDER BY RTRIM(A.EMPLOYEE_UUID)
+		]]>
+	</sql>
+	<sql id="getTreeById" type="default">
+    	<![CDATA[
+    		SELECT RTRIM(A.ORG_UUID) UUID,RTRIM(A.ORG_SEQ_CODE) ID, ORG_NAME NAME
+			FROM T_TM_ORG_BASE_INFO A
+			WHERE RTRIM(A.ORG_SEQ_CODE) = :id AND A.EFFECTIVE_STATUS = 1
+		]]>
+	</sql>
+	
+	<sql id="getRoTree" type="default">
+    	<![CDATA[
+    		SELECT 'root' AS P_ID, '0000000000000000000000000000000000000000000000000000000000000000' AS ID, '组织树' AS NAME,
+    			CASE WHEN B.NUM>0 THEN 'true' ELSE 'false' END IS_PARENT
+    		FROM SYSIBM.SYSDUMMY1 A
+    		LEFT JOIN 
+    		(
+    			SELECT COUNT(1) NUM
+    			FROM RO_ORG A
+    			WHERE 1=1 AND DELTAG='0' AND STATUS=0 AND PARENTORGUUID='0000000000000000000000000000000000000000000000000000000000000000'
+    		) B ON 1=1
+		]]>
+	</sql>
+	<sql id="getRoTreeChild" type="default">
+    	<![CDATA[
+    		SELECT RTRIM(A.PARENTORGUUID) AS P_ID, RTRIM(A.ORGUUID) AS ID, CNNAME AS NAME,
+    			CASE WHEN B.NUM>0 THEN 'true' ELSE 'false' END IS_PARENT
+    		FROM RO_ORG A
+    		LEFT JOIN 
+    		(
+    			SELECT A.PARENTORGUUID AS ORGUUID,COUNT(1) NUM
+    			FROM RO_ORG A
+    			WHERE 1=1 AND DELTAG='0' AND STATUS=0 AND A.PARENTORGUUID IN (SELECT ORGUUID FROM RO_ORG WHERE DELTAG='0' AND STATUS=0 AND PARENTORGUUID= :id)
+    			GROUP BY A.PARENTORGUUID
+    		) B ON RTRIM(A.ORGUUID)=B.ORGUUID
+    		WHERE 1=1 AND DELTAG='0' AND STATUS=0 AND A.PARENTORGUUID= :id
+    		ORDER BY A.SEQUENCENO
+		]]>
+	</sql>
+	
+	
+    <sql id="list" type="default">
+    	<![CDATA[
+    	select RTRIM(A.EMPLOYEE_UUID) EMPLOYEE_UUID, A.EMPLOYEE_MAIN_JOB, A.EMPLOYEE_SECOND_JOB, 
+				A.MAIN_JOB_TYPE, A.EMPLOYEE_UNIT, A.EMPLOYEE_DEPT, A.EMPLOYEE_NAME, 
+			    A.EMPLOYEE_SEX, A.EMPLOYEE_BIRTHDAY, A.EMPLOYEE_NATION, A.NATIVE_PLACE, 
+			    A.EMPLOYEE_DEGREE, A.ID_CARD_NO, A.MOBILE_PHONE, A.PHONE_NO, 
+			    A.EMAIL_ADRESS, A.STAFFING_TYPE, A.WORK_BEGIN_DATE, A.EFFECTIVE_STATUS, 
+			    A.INSPECTION_CERT_PERIOD_S, A.INSPECTION_CERT_NO, A.LE_CERT_NO, 
+			    A.LE_CERT_PERIOD_S, A.LE_CERT_PERIOD_E, A.MONOPOLY_BEGIN_DATE, 
+			    A.INSPECTION_REGION, A.ISSUING_AUTHORITY_NAME, A.CUR_SKILL_LEVEL, 
+			    A.CUR_SKILL_DATE, A.CUR_SKILL_NO, A.CUR_ENGAGE_LEVEL, A.CUR_ENGAGE_DATE, 
+			    A.EMPLOYEE_PHOTO, A.EMPLOYEE_PHOTO_FILE_NAME, A.INF_TIMESTAMP, 
+			    A.INF_LAST_MODIFIER, A.INSPECTION_CERT_PERIOD_E,
+				B.STD_JOB_NAME EMPLOYEE_MAIN_JOB_NAME,C.ORG_NAME UNIT_NAME,D.ORG_NAME DEPT_NAME
+	  	from T_TM_EMPLOYEE_BASE_INFO A
+	  	LEFT JOIN T_TM_MONOPOLY_STD_JOB B ON A.EMPLOYEE_MAIN_JOB=B.STD_JOB_UUID
+	  	LEFT JOIN T_TM_ORG_BASE_INFO C ON A.EMPLOYEE_UNIT=C.ORG_UUID
+	  	LEFT JOIN T_TM_ORG_BASE_INFO D ON A.EMPLOYEE_DEPT=D.ORG_UUID
+  		WHERE 1=1 AND D.ORG_SEQ_CODE like ${sqlUtil.like(":employeeDept")}
+  		#if(${employeeName}) AND EMPLOYEE_NAME like ${sqlUtil.like(":employeeName")} #end 
+		#if(${idCardNo}) AND ID_CARD_NO like ${sqlUtil.like(":idCardNo")} #end 
+		#if(${effectiveStatus}) AND A.EFFECTIVE_STATUS = :effectiveStatus #end 
+		ORDER BY D.ORG_SEQ_CODE,A.EMPLOYEE_MAIN_JOB,A.EMPLOYEE_UUID
+		]]>
+	</sql>
+	<sql id="getEmployeeById" type="default">
+    	<![CDATA[
+    	select RTRIM(A.EMPLOYEE_UUID) EMPLOYEE_UUID, A.EMPLOYEE_MAIN_JOB, A.EMPLOYEE_SECOND_JOB, 
+				A.MAIN_JOB_TYPE, A.EMPLOYEE_UNIT, A.EMPLOYEE_DEPT, A.EMPLOYEE_NAME, 
+			    A.EMPLOYEE_SEX, A.EMPLOYEE_BIRTHDAY, A.EMPLOYEE_NATION, A.NATIVE_PLACE, 
+			    A.EMPLOYEE_DEGREE, A.ID_CARD_NO, A.MOBILE_PHONE, A.PHONE_NO, 
+			    A.EMAIL_ADRESS, A.STAFFING_TYPE, A.WORK_BEGIN_DATE, A.EFFECTIVE_STATUS, 
+			    A.INSPECTION_CERT_PERIOD_S, A.INSPECTION_CERT_NO, A.LE_CERT_NO, 
+			    A.LE_CERT_PERIOD_S, A.LE_CERT_PERIOD_E, A.MONOPOLY_BEGIN_DATE, 
+			    A.INSPECTION_REGION, A.ISSUING_AUTHORITY_NAME, A.CUR_SKILL_LEVEL, 
+			    A.CUR_SKILL_DATE, A.CUR_SKILL_NO, A.CUR_ENGAGE_LEVEL, A.CUR_ENGAGE_DATE, 
+			    A.EMPLOYEE_PHOTO, A.EMPLOYEE_PHOTO_FILE_NAME, A.INF_TIMESTAMP, 
+			    A.INF_LAST_MODIFIER, A.INSPECTION_CERT_PERIOD_E,
+				B.STD_JOB_NAME EMPLOYEE_MAIN_JOB_NAME,C.ORG_NAME UNIT_NAME,D.ORG_NAME DEPT_NAME,
+				C.ORG_SEQ_CODE UNIT_CODE,D.ORG_SEQ_CODE DEPT_CODE,
+				E.BCB_NAME as skillLevelName,F.BCB_NAME as engageLevelName
+	  	from T_TM_EMPLOYEE_BASE_INFO A
+	  	LEFT JOIN T_TM_MONOPOLY_STD_JOB B ON A.EMPLOYEE_MAIN_JOB=B.STD_JOB_UUID
+	  	LEFT JOIN T_TM_ORG_BASE_INFO C ON A.EMPLOYEE_UNIT=C.ORG_UUID AND C.EFFECTIVE_STATUS = 1
+	  	LEFT JOIN T_TM_ORG_BASE_INFO D ON A.EMPLOYEE_DEPT=D.ORG_UUID AND D.EFFECTIVE_STATUS = 1
+	  	LEFT JOIN BSC_CODE_BASE E ON A.CUR_SKILL_LEVEL=E.BCB_ENUM AND E.BCT_ID = '402881f54dbdd101014dbdd101f30106'
+	  	LEFT JOIN BSC_CODE_BASE F ON A.CUR_ENGAGE_LEVEL=F.BCB_ENUM AND F.BCT_ID = '402881f54dbdd101014dbdd101f30106'
+  		WHERE 1=1 AND A.EMPLOYEE_UUID= :employeeUuid
+		]]>
+	</sql>
+	<sql id="getEmployeeByIdCardNo" type="default">
+    	<![CDATA[
+    	select RTRIM(A.EMPLOYEE_UUID) EMPLOYEE_UUID, A.EMPLOYEE_MAIN_JOB, A.EMPLOYEE_SECOND_JOB, 
+				A.MAIN_JOB_TYPE, A.EMPLOYEE_UNIT, A.EMPLOYEE_DEPT, A.EMPLOYEE_NAME, 
+			    A.EMPLOYEE_SEX, A.EMPLOYEE_BIRTHDAY, A.EMPLOYEE_NATION, A.NATIVE_PLACE, 
+			    A.EMPLOYEE_DEGREE, A.ID_CARD_NO, A.MOBILE_PHONE, A.PHONE_NO, 
+			    A.EMAIL_ADRESS, A.STAFFING_TYPE, A.WORK_BEGIN_DATE, A.EFFECTIVE_STATUS, 
+			    A.INSPECTION_CERT_PERIOD_S, A.INSPECTION_CERT_NO, A.LE_CERT_NO, 
+			    A.LE_CERT_PERIOD_S, A.LE_CERT_PERIOD_E, A.MONOPOLY_BEGIN_DATE, 
+			    A.INSPECTION_REGION, A.ISSUING_AUTHORITY_NAME, A.CUR_SKILL_LEVEL, 
+			    A.CUR_SKILL_DATE, A.CUR_SKILL_NO, A.CUR_ENGAGE_LEVEL, A.CUR_ENGAGE_DATE, 
+			    A.EMPLOYEE_PHOTO, A.EMPLOYEE_PHOTO_FILE_NAME, A.INF_TIMESTAMP, 
+			    A.INF_LAST_MODIFIER, A.INSPECTION_CERT_PERIOD_E,
+				B.STD_JOB_NAME EMPLOYEE_MAIN_JOB_NAME,C.ORG_NAME UNIT_NAME,D.ORG_NAME DEPT_NAME,
+				C.ORG_SEQ_CODE UNIT_CODE,D.ORG_SEQ_CODE DEPT_CODE,
+				E.BCB_NAME as skillLevelName,F.BCB_NAME as engageLevelName
+	  	from T_TM_EMPLOYEE_BASE_INFO A
+	  	LEFT JOIN T_TM_MONOPOLY_STD_JOB B ON A.EMPLOYEE_MAIN_JOB=B.STD_JOB_UUID
+	  	LEFT JOIN T_TM_ORG_BASE_INFO C ON A.EMPLOYEE_UNIT=C.ORG_UUID AND C.EFFECTIVE_STATUS = 1
+	  	LEFT JOIN T_TM_ORG_BASE_INFO D ON A.EMPLOYEE_DEPT=D.ORG_UUID AND D.EFFECTIVE_STATUS = 1
+	  	LEFT JOIN BSC_CODE_BASE E ON A.CUR_SKILL_LEVEL=E.BCB_ENUM AND E.BCT_ID = '402881f54dbdd101014dbdd101f30106'
+	  	LEFT JOIN BSC_CODE_BASE F ON A.CUR_ENGAGE_LEVEL=F.BCB_ENUM AND F.BCT_ID = '402881f54dbdd101014dbdd101f30106'
+  		WHERE 1=1 AND A.ID_CARD_NO= :idCardNo
+		]]>
+	</sql>
+	<sql id="getMzList" type="default">
+    	<![CDATA[
+    	SELECT BCB_ENUM code,BCB_NAME name
+    	FROM BSC_CODE_BASE
+    	WHERE 1=1 AND BCT_ID = '402881f54dbdd101014dbdd101f30103'
+    	ORDER BY BCB_ENUM
+		]]>
+	</sql>
+	<sql id="getJgList" type="default">
+    	<![CDATA[
+    	SELECT REGION_CODE code,REGION_NAME name
+    	FROM T_BASE_CODE_REGION
+    	WHERE 1=1 
+    	ORDER BY REGION_CODE
+		]]>
+	</sql>
+	<sql id="getXlList" type="default">
+    	<![CDATA[
+    	SELECT BCB_ENUM code,BCB_NAME name
+    	FROM BSC_CODE_BASE
+    	WHERE 1=1 AND BCT_ID = '402881f54dbdd101014dbdd101f30102'
+    	ORDER BY BCB_ENUM
+		]]>
+	</sql>
+	<sql id="getGwList" type="default">
+    	<![CDATA[
+    	SELECT STD_JOB_UUID code,VALUE(STD_JOB_TYPE,0) type,STD_JOB_NAME name
+    	FROM T_TM_MONOPOLY_STD_JOB A
+    	LEFT JOIN T_TM_ORG_BASE_INFO B ON A.STD_DEPT_UUID=B.STD_DEPT_UUID AND B.EFFECTIVE_STATUS = 1
+		WHERE 1=1 AND B.ORG_SEQ_CODE = :deptCode
+		ORDER BY STD_JOB_UUID
+		]]>
+	</sql>
+	
+	<sql id="listJnjdGrid" type="default">
+    	<![CDATA[
+    		SELECT A.ISSUING_DATE,A.ISSUING_AUTHORITY_NAME,A.SKILL_IDENT_LEVEL,A.SKILL_CERT_NO,B.BCB_NAME as skillLevelName,
+    			C.EMPLOYEE_MAIN_JOB_NAME
+    		FROM T_TM_SKILL_IDENT_HIS_INFO A
+    		left join BSC_CODE_BASE B ON A.SKILL_IDENT_LEVEL=B.BCB_ENUM AND B.BCT_ID = '402881f54dbdd101014dbdd101f30106'
+    		LEFT JOIN 
+    		(
+    			SELECT A.EMPLOYEE_MAIN_JOB,B.STD_JOB_NAME EMPLOYEE_MAIN_JOB_NAME
+    			FROM T_TM_EMPLOYEE_BASE_INFO A
+    			LEFT JOIN T_TM_MONOPOLY_STD_JOB B ON A.EMPLOYEE_MAIN_JOB=B.STD_JOB_UUID
+    			WHERE 1=1 AND A.EMPLOYEE_UUID =:employeeUuid
+    		) C ON 1=1
+    		WHERE 1=1 AND A.EMPLOYEE_UUID =:employeeUuid
+    		ORDER BY A.ISSUING_DATE DESC
+		]]>
+	</sql>
+	<sql id="listGzbdGrid" type="default">
+    	<![CDATA[
+    		SELECT JOB_CHANGE_HIS_UUID, EMPLOYEE_UUID, JOB_ENTRY_DATE, 
+			    MAIN_JOB_NAME, DEPT_NAME, UNIT_NAME, JOB_LEAVE_DATE, 
+			    IS_SYS_AUTO_CREATE, INF_LAST_MODIFIER, INF_TIMESTAMP
+    		FROM T_TM_JOB_CHANGE_HIS_INFO
+    		WHERE 1=1 AND EMPLOYEE_UUID =:employeeUuid
+    		ORDER BY JOB_ENTRY_DATE DESC
+		]]>
+	</sql>
+	<sql id="listZbxxGrid" type="default">
+    	<![CDATA[
+    		SELECT A.EMPLOYEE_NAME,C.ORG_NAME UNIT_NAME,D.ORG_NAME DEPT_NAME,
+    			F.EQUIP_CLASS_NAME,E.EQUIP_MODEL,E.CHANGE_QTY,TO_CHAR(E.STANDING_BOOK_TIME,'YYYY-MM-DD HH24:MI:SS') STANDING_BOOK_TIME
+    		from T_TM_EMPLOYEE_BASE_INFO A
+		  	LEFT JOIN T_TM_ORG_BASE_INFO C ON A.EMPLOYEE_UNIT=C.ORG_UUID AND C.EFFECTIVE_STATUS = 1
+		  	LEFT JOIN T_TM_ORG_BASE_INFO D ON A.EMPLOYEE_DEPT=D.ORG_UUID AND D.EFFECTIVE_STATUS = 1
+		  	LEFT JOIN T_TM_EMPLOYEE_EQUIP_STANDING_BOOK E ON A.EMPLOYEE_UUID=E.EMPLOYEE_UUID
+		  	LEFT JOIN T_TM_EQUIP_CLASS F ON E.EQUIP_CLASS_UUID=F.EQUIP_CLASS_UUID
+    		WHERE 1=1 AND A.EMPLOYEE_UUID =:employeeUuid
+    		ORDER BY E.STANDING_BOOK_TIME DESC
+		]]>
+	</sql>
+	<sql id="listPrxxGrid" type="default">
+    	<![CDATA[
+	    	SELECT A.ENGAGE_HIS_INFO_UUID, A.EMPLOYEE_UUID, A.ENGAGE_LEVEL, A.ENGAGE_DATE,
+			    A.ENGAGE_PERIOD_E, A.ENGAGE_UNIT_NAME, A.INF_TIMESTAMP, 
+			    A.INF_LAST_MODIFIER, F.BCB_NAME as engageLevelName
+	    	FROM T_TM_ENGAGE_HIS_INFO A
+	    	LEFT JOIN BSC_CODE_BASE F ON A.ENGAGE_LEVEL=F.BCB_ENUM AND F.BCT_ID = '402881f54dbdd101014dbdd101f30106'
+	    	WHERE 1=1 AND A.EMPLOYEE_UUID =:employeeUuid
+	    	ORDER BY A.ENGAGE_DATE DESC
+		]]>
+	</sql>
+	<sql id="getUserListByIds" type="default">
+    	<![CDATA[
+	    	select RTRIM(A.EMPLOYEE_UUID) EMPLOYEE_UUID, A.EMPLOYEE_NAME
+	  		from T_TM_EMPLOYEE_BASE_INFO A
+	  		WHERE 1=1 AND A.EMPLOYEE_UUID IN (:employeeUuid)
+		]]>
+	</sql>
+	<sql id="getUserListByDeptCode" type="default">
+    	<![CDATA[
+	    	select RTRIM(A.EMPLOYEE_UUID) EMPLOYEE_UUID, A.EMPLOYEE_NAME
+	  		from T_TM_EMPLOYEE_BASE_INFO A
+	  		LEFT JOIN T_TM_ORG_BASE_INFO D ON A.EMPLOYEE_DEPT=D.ORG_UUID AND D.EFFECTIVE_STATUS = 1
+  			WHERE 1=1 AND D.ORG_SEQ_CODE like ${sqlUtil.like(":employeeDept")}
+		]]>
+	</sql>
+	<sql id="getUserInfoByUuid" type="default">
+		<![CDATA[
+			SELECT
+			    RTRIM(A.EMPLOYEE_UUID) EMPLOYEE_UUID,
+			    A.EMPLOYEE_UNIT,
+			    A.EMPLOYEE_DEPT,
+			    A.EMPLOYEE_NAME,
+			    A.PHONE_NO,
+			    A.INSPECTION_CERT_NO,
+			    A.LE_CERT_NO,
+			    A.INSPECTION_REGION,
+			    A.ISSUING_AUTHORITY_NAME,
+			    C.ORG_NAME     UNIT_NAME,
+			    C.ORG_CODE     UNIT_ORG_CODE,
+			    C.ORG_SEQ_CODE UNIT_CODE,
+			    C.ORG_RANK     UNIT_RANK,
+			    D.ORG_NAME     DEPT_NAME,	
+			    D.ORG_CODE 	   DEPT_ORG_CODE,
+			    D.ORG_SEQ_CODE DEPT_CODE,
+			    E.COUNTRYCODE,
+			    E.COUNTRYNAME,
+			    E.ADMDIVCODE,
+			    E.ADMDIVNAME,
+			    E.PROCODE,
+			    E.PRONAME
+			FROM    
+				T_TM_EMPLOYEE_BASE_INFO A
+			LEFT JOIN 
+				T_TM_ORG_BASE_INFO C 
+			ON 
+				A.EMPLOYEE_UNIT=C.ORG_UUID AND C.EFFECTIVE_STATUS = 1
+			LEFT JOIN 
+				T_TM_ORG_BASE_INFO D 
+			ON 
+				A.EMPLOYEE_DEPT=D.ORG_UUID AND D.EFFECTIVE_STATUS = 1
+			LEFT JOIN 
+				STMB_ORG_CODE_AREA E 
+			ON 
+				E.COUNTRYCODE = C.ORG_ADDR_ADR
+			WHERE
+			    1=1
+			AND A.EMPLOYEE_UUID = '$employeeUuid'
+			
+		]]>
+	</sql>	
+  	<sql id="getEmployeeList" type="default"><![CDATA[
+		SELECT RTRIM(T.EMPLOYEE_UUID) EMPLOYEE_UUID,T.EMPLOYEE_NAME,T.LE_CERT_NO
+		FROM T_TM_EMPLOYEE_BASE_INFO  T WHERE 1=1  
+	 #if(${employeeDept}) AND T.EMPLOYEE_DEPT=:employeeDept #end
+	]]></sql>
+	
+	<sql id="getEmployeeListByRole" type="default"><![CDATA[
+		SELECT
+		   RTRIM(T1.EMPLOYEE_UUID) EMPLOYEE_UUID,
+		   T1.EMPLOYEE_NAME,
+		   T1.LE_CERT_NO,
+		   T4.ORG_NAME	UNIT_NAME,
+		   T5.ORG_NAME  DEPT_NAME
+		FROM
+		    T_TM_EMPLOYEE_BASE_INFO T1,
+		    SYS_RIGHTSHORTCUT T2,
+		    SYS_ROLE T3,
+		    T_TM_ORG_BASE_INFO T4,
+		    T_TM_ORG_BASE_INFO T5
+		WHERE
+		    T1.EMPLOYEE_UUID=T2.PERSONUUID AND T4.EFFECTIVE_STATUS = 1 AND T5.EFFECTIVE_STATUS = 1
+		AND T1.EMPLOYEE_UNIT=T4.ORG_UUID
+		AND T1.EMPLOYEE_DEPT=T5.ORG_UUID
+		AND T2.ROLEID=T3.ROLEID
+		AND T1.EFFECTIVE_STATUS=:effectiveStatus
+		AND T1.EMPLOYEE_UNIT=:employeeUnit
+		AND T3.ROLECODE=:roleCode
+	]]></sql>
+	<!-- '20150529000003','20150529000004','20150529000005' 为队所 -->
+	<sql id="getCheckEmployeeList" type="default"><![CDATA[
+		SELECT
+		   RTRIM(T1.EMPLOYEE_UUID) EMPLOYEE_UUID,
+		   T1.EMPLOYEE_NAME,
+		   T1.LE_CERT_NO,
+		   T2.ORG_NAME	UNIT_NAME,
+		   T3.ORG_NAME  DEPT_NAME
+		FROM
+		    T_TM_EMPLOYEE_BASE_INFO T1,
+		    T_TM_ORG_BASE_INFO T2,
+		    T_TM_ORG_BASE_INFO T3,
+		    T_TM_MONOPOLY_STD_JOB T4
+		WHERE
+		T1.EMPLOYEE_UNIT=T2.ORG_UUID AND T2.EFFECTIVE_STATUS = 1 AND T3.EFFECTIVE_STATUS = 1
+		AND T1.EMPLOYEE_DEPT=T3.ORG_UUID
+		AND T1.EMPLOYEE_MAIN_JOB = T4.STD_JOB_UUID
+		AND T1.EFFECTIVE_STATUS=:effectiveStatus
+		AND T1.EMPLOYEE_UNIT=:employeeUnit
+		AND T4.STD_JOB_NAME not in ('局长','副局长','专卖监督管理科（股）长','专卖监督管理副科（股）长')
+		#if(${employeeName}) AND T1.EMPLOYEE_NAME like ${sqlUtil.like(":employeeName")} #end 
+	]]></sql>
+	
+    <id name="employeeUuid" type="java.lang.String">
+      <column name="EMPLOYEE_UUID" not-null="true" length="64">
+        <comment>员工uuid</comment>
+      </column>
+    </id>
+    <property name="employeeMainJob" type="java.lang.String">
+      <column name="EMPLOYEE_MAIN_JOB" length="64">
+        <comment>员工主岗</comment>
+      </column>
+    </property>
+    <property name="employeeSecondJob" type="java.lang.String">
+      <column name="EMPLOYEE_SECOND_JOB" length="64">
+        <comment>员工兼岗</comment>
+      </column>
+    </property>
+    <property name="mainJobType" type="java.lang.Short">
+      <column name="MAIN_JOB_TYPE">
+        <comment>主岗所属标准分类</comment>
+      </column>
+    </property>
+    <property name="employeeUnit" type="java.lang.String">
+      <column name="EMPLOYEE_UNIT" length="64">
+        <comment>员工所属单位</comment>
+      </column>
+    </property>
+    <property name="employeeDept" type="java.lang.String">
+      <column name="EMPLOYEE_DEPT" length="64">
+        <comment>员工所属部门</comment>
+      </column>
+    </property>
+    <property name="employeeName" type="java.lang.String">
+      <column name="EMPLOYEE_NAME" length="56">
+        <comment>员工姓名</comment>
+      </column>
+    </property>
+    <property name="employeeSex" type="java.lang.Short">
+      <column name="EMPLOYEE_SEX">
+        <comment>员工性别0未知的性别，1男性，2女性，9未说明的性别</comment>
+      </column>
+    </property>
+    <property name="employeeBirthday" type="java.sql.Date">
+      <column name="EMPLOYEE_BIRTHDAY">
+        <comment>出生日期</comment>
+      </column>
+    </property>
+    <property name="employeeNation" type="java.lang.Short">
+      <column name="EMPLOYEE_NATION">
+        <comment>民族</comment>
+      </column>
+    </property>
+    <property name="nativePlace" type="java.lang.String">
+      <column name="NATIVE_PLACE" length="6">
+        <comment>籍贯（只到市）</comment>
+      </column>
+    </property>
+    <property name="employeeDegree" type="java.lang.Short">
+      <column name="EMPLOYEE_DEGREE">
+        <comment>员工学历</comment>
+      </column>
+    </property>
+    <property name="idCardNo" type="java.lang.String">
+      <column name="ID_CARD_NO" length="24">
+        <comment>身份证号</comment>
+      </column>
+    </property>
+    <property name="mobilePhone" type="java.lang.String">
+      <column name="MOBILE_PHONE" length="24">
+        <comment>手机号码</comment>
+      </column>
+    </property>
+    <property name="phoneNo" type="java.lang.String">
+      <column name="PHONE_NO" length="24">
+        <comment>联系电话</comment>
+      </column>
+    </property>
+    <property name="emailAdress" type="java.lang.String">
+      <column name="EMAIL_ADRESS" length="40">
+        <comment>邮件</comment>
+      </column>
+    </property>
+    <property name="staffingType" type="java.lang.Short">
+      <column name="STAFFING_TYPE">
+        <comment>编制类型</comment>
+      </column>
+    </property>
+    <property name="workBeginDate" type="java.sql.Date">
+      <column name="WORK_BEGIN_DATE">
+        <comment>参加工作时间</comment>
+      </column>
+    </property>
+    <property name="effectiveStatus" type="java.lang.Short">
+      <column name="EFFECTIVE_STATUS">
+        <comment>启用状态0：停用1：启用</comment>
+      </column>
+    </property>
+    <property name="inspectionCertPeriodS" type="java.sql.Date">
+      <column name="INSPECTION_CERT_PERIOD_S">
+        <comment>检查证有效期-起（发证日期）</comment>
+      </column>
+    </property>
+    <property name="inspectionCertNo" type="java.lang.String">
+      <column name="INSPECTION_CERT_NO" length="32">
+        <comment>检查证号</comment>
+      </column>
+    </property>
+    <property name="leCertNo" type="java.lang.String">
+      <column name="LE_CERT_NO" length="32">
+        <comment>执法证号</comment>
+      </column>
+    </property>
+    <property name="leCertPeriodS" type="java.sql.Date">
+      <column name="LE_CERT_PERIOD_S">
+        <comment>执法证有效期-起（发证日期）</comment>
+      </column>
+    </property>
+    <property name="leCertPeriodE" type="java.sql.Date">
+      <column name="LE_CERT_PERIOD_E">
+        <comment>执法证有效期-止</comment>
+      </column>
+    </property>
+    <property name="monopolyBeginDate" type="java.sql.Date">
+      <column name="MONOPOLY_BEGIN_DATE">
+        <comment>参加专卖时间</comment>
+      </column>
+    </property>
+    <property name="inspectionRegion" type="java.lang.String">
+      <column name="INSPECTION_REGION" length="32">
+        <comment>检查地区（多）</comment>
+      </column>
+    </property>
+    <property name="issuingAuthorityName" type="java.lang.String">
+      <column name="ISSUING_AUTHORITY_NAME" length="80">
+        <comment>发证机关名称</comment>
+      </column>
+    </property>
+    <property name="curSkillLevel" type="java.lang.Short">
+      <column name="CUR_SKILL_LEVEL">
+        <comment>当前技能鉴定等级</comment>
+      </column>
+    </property>
+    <property name="curSkillDate" type="java.sql.Date">
+      <column name="CUR_SKILL_DATE">
+        <comment>当前技能鉴定日期</comment>
+      </column>
+    </property>
+    <property name="curEngageLevel" type="java.lang.Short">
+      <column name="CUR_ENGAGE_LEVEL">
+        <comment>当前聘任等级</comment>
+      </column>
+    </property>
+    <property name="curEngageDate" type="java.sql.Date">
+      <column name="CUR_ENGAGE_DATE">
+        <comment>当前聘任日期</comment>
+      </column>
+    </property>
+    <property name="employeePhoto" type="java.lang.String">
+      <column name="EMPLOYEE_PHOTO" length="256">
+        <comment>员工照片</comment>
+      </column>
+    </property>
+    <property name="employeePhotoFileName" type="java.lang.String">
+      <column name="EMPLOYEE_PHOTO_FILE_NAME" length="100">
+        <comment>员工照片原文件名</comment>
+      </column>
+    </property>
+    <property name="infTimestamp" type="java.lang.Long">
+      <column name="INF_TIMESTAMP" precision="20">
+        <comment>记录最后修改时间</comment>
+      </column>
+    </property>
+    <property name="infLastModifier" type="java.lang.String">
+      <column name="INF_LAST_MODIFIER" length="64">
+        <comment>记录最后修改人</comment>
+      </column>
+    </property>
+    <property name="inspectionCertPeriodE" type="java.sql.Date">
+      <column name="INSPECTION_CERT_PERIOD_E">
+        <comment>检查证有效期-止</comment>
+      </column>
+    </property>
+    
+    
+  </class>
+</model-mapping>

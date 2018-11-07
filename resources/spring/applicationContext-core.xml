@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd">
+	<!-- 数据源事务管理方式 在这里会将Connection释放掉 -->
+    <bean id="dsTM" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+        
+    <!-- 如果需要自动关闭DbLink，请使用这个事务管理器，并在使用dao的时候调用dao.registerDbLink注册要关闭的DbLink
+    <bean id="dsTM" class="com.chinasofti.ro.bizframework.core.orm.TransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+     -->
+    
+    <!--声明式事物配置 数据源事务拦截器 -->
+	<bean id="dsTransactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<!-- 事务拦截器bean需要依赖注入一个事务管理器 -->
+		<property name="transactionManager" ref="dsTM"/>
+		
+		<!-- 定义事务传播属性-->
+		<property name="transactionAttributes">
+			<props>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="insert*">PROPAGATION_REQUIRED</prop>
+				<prop key="create*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="remove*">PROPAGATION_REQUIRED</prop>			
+				<prop key="batch*">PROPAGATION_REQUIRED</prop>
+				<prop key="execute*">PROPAGATION_REQUIRED</prop>
+				<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="query*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="search*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- 所有Service结尾的Bean需要自动创建事务代理 -->
+	<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<!-- 指定对满足哪些bean name的bean自动生成业务代理 -->
+		<property name="beanNames">
+			<value>*Service</value>
+		</property>
+		<!-- 下面定义BeanNameAutoProxyCreator所需的事务拦截器-->
+		<property name="interceptorNames">
+			<list>
+				<value>dsTransactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	<bean class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
+		<property name="transactionInterceptor" ref="dsTransactionInterceptor"/>
+	</bean>
+	
+    <bean id="repository" class="com.chinasofti.ro.bizframework.core.orm.DAO" autowire="byName" />
+    <bean id="dao" class="com.chinasofti.ro.bizframework.core.orm.DAO" autowire="byName" />
+	<bean id="dao_rone" class="com.chinasofti.ro.bizframework.core.orm.DAO" autowire="byName" >
+		<property name="dataSource">
+			<ref bean="dataSource_rone"/>
+		</property>
+	</bean>
+	<bean id="beanFactory" class="com.chinasofti.ro.bizframework.core.libs.BeanFactory"/>
+	
+	<!-- FOR DEBUG -->
+	<bean id="log4jdbcInterceptor" class="com.chinasofti.ro.bizframework.modules.log4jdbc.DataSourceSpyInterceptor" />
+	<bean id="dataSourceLog4jdbcAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">  
+		<property name="interceptorNames">  
+			<list>  
+				<value>log4jdbcInterceptor</value>          
+			</list> 
+		</property>  
+		<property name="beanNames">  
+			<list>  
+				<value>dataSource</value>  
+			</list>  
+		</property>  
+	</bean>
+
+	<!-- ****************************************** 缓存机制的配置 ******************************************************** -->	
+	<bean id="cacheMg" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation">
+			<value>classpath:ehcache.xml</value>
+		</property>
+	</bean>
+	<bean id="ehCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheManager">
+			<ref local="cacheMg"/>
+		</property>
+		<property name="cacheName">
+			<value>METHOD_CACHE</value>
+		</property>
+	</bean>
+	<bean id="ehCacheImpl" class="com.chinasofti.ro.bizframework.core.cache.EhCacheImpl">
+		<property name="ehcache">
+			<ref local="ehCache"/>
+		</property>
+	</bean>
+	<bean id="bizCache" class="com.chinasofti.ro.bizframework.core.cache.BizCache" autowire="byName" >
+		<property name="cache">
+			<ref local="ehCacheImpl"/>
+		</property>
+	</bean>
+	
+	<!-- ****************************************** bizframework mvc 的基本配置 ******************************************************** -->
+	<bean id="customPropertyEditorRegistrar" class="com.chinasofti.ro.bizframework.core.web.propertyeditor.CustomPropertyEditorRegistrar" />
+	<bean id="messageSource" class="com.chinasofti.ro.bizframework.core.i18n.BizResourceBundleMessageSource">
+		<property name="basename">
+			<value>classpath*:i18n/*.properties</value>
+		</property>
+	</bean>
+	<bean id="velocityConfigurer" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath">
+			<value>pages/</value>
+		</property>
+    </bean>
+	<bean id="templateLoader" class="com.chinasofti.ro.bizframework.core.template.TemplateLoader">
+		<property name="velocityConfigurer">
+			<ref local="velocityConfigurer"/>
+		</property>
+    </bean>
+    
+	<bean id="bizExceptionResolver" class="com.chinasofti.ro.bizframework.core.exceptions.BizExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+				<prop key="com.chinasofti.ro.bizframework.core.mvc.exception.ActionNotFoundException">error.html</prop>
+                <prop key="org.springframework.dao.DataAccessException">error.html</prop>
+                <prop key="com.chinasofti.ro.bizframework.core.orm.BizDAOException">error.html</prop>
+                <prop key="java.sql.SQLException">error.html</prop>
+                <prop key="java.lang.IllegalStateException">error.html</prop>
+        		<prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">error.html</prop>
+            </props>
+        </property>
+    </bean>
+	
+	<bean id="renderResolver" class="com.chinasofti.ro.bizframework.core.mvc.UrlBaseRenderResolver">
+		<property name="renderClass" value="com.chinasofti.ro.bizframework.core.mvc.render.RenderJsp"/>
+		<property name="prefix" value="/pages/"/>
+	</bean>
+	
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:mail.properties</value>
+                <value>classpath:bizframework.properties</value>
+            </list>
+        </property>
+    </bean>
+</beans>

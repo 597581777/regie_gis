@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE bizframework-mvc PUBLIC "-//BizFramework/bizframework mvc DTD 4.2//EN" "http://www.chinasofti.com/bizframework-mvc.dtd">
+<bizframework-mvc>
+	<!-- ADD NEW CONTROLLER HERE -->
+	<!--licquery-CONTROLLER-START-->
+	<controller name="com.icss.regiegis.licquery.controller.LicQueryController">
+		<method name="queryLicList" uri="/licquery/queryLicList"></method>
+		<method name="queryLicInfoQm" uri="/licquery/queryLicInfoQm"></method>
+		<method name="updateLicInfoLocal" uri="/licquery/updateLicInfoLocal"></method>
+		<method name="getLicInfos" uri="/licquery/getLicInfos"></method>
+		
+	</controller>
+	<!--licquery-CONTROLLER-END-->
+	<!--licquery-CONTROLLER-START-->
+	<controller name="com.icss.regiegis.licquery.controller.TLicLocationVerifyController">
+		<method name="index" uri="/licLocationVerify/index">
+			<result name="success">licquery/licLocationVerify.html</result>
+		</method>
+		<method name="saveLicLocationApply" uri="/licLocationVerify/saveLicLocationApply"></method>
+		<method name="getLicVerifyList" uri="/licLocationVerify/getLicVerifyList"></method>
+		<method name="licLocalModifyApply" uri="/licLocationVerify/licLocalModifyApply"></method>
+	
+		<method name="approveLicLocal" uri="/licLocationVerify/approveLicLocal">
+		</method>
+	</controller>
+	<!--licquery-CONTROLLER-END-->
+</bizframework-mvc>

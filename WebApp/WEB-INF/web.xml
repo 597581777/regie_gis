@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+"http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+
+<!-- 定义 CSS 主题 -->
+<context-param>
+<param-name>csstheme</param-name>
+<param-value>default</param-value>
+</context-param>
+<!-- 定义 CSS 后缀名,开发时使用css,部署时使用gzcss -->
+<context-param>
+<param-name>csssuffix</param-name>
+<param-value>css</param-value>
+</context-param>
+<!-- 定义 descript 后缀名,开发时使用js,部署时使用gzjs -->
+<context-param>
+<param-name>jssuffix</param-name>
+<param-value>js</param-value>
+</context-param>
+<!-- 设置resourceOneHome的目录及配置文件 -->
+<context-param>
+<param-name>resourceOneHome</param-name>
+<param-value>/ResourceOneHome</param-value>
+</context-param>
+<!-- 设置resourceOneHome的核心配置文件路径 -->
+<context-param>
+<param-name>resourceOneCoreConfigPath</param-name>
+<param-value>config</param-value>
+</context-param>
+<!-- 设置resourceOneHome的应用配置文件路径 -->
+<context-param>
+<param-name>resourceOneAppConfigPath</param-name>
+<param-value>config</param-value>
+</context-param>
+
+<!-- i18n 的配置 -->
+<context-param>
+<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+<param-value>i18n/messages</param-value>
+</context-param>
+<!-- 容器启动时需加载的Spring配置 -->
+<context-param>
+<param-name>contextConfigLocation</param-name>
+<param-value>classpath:/spring/applicationContext-*.xml</param-value>
+</context-param>
+
+<!-- 页面如果没设置字符集，可通过请求参数中带有charset参数设置页面字符集 -->
+<filter>
+<filter-name>characterEncodingFilter</filter-name>
+<filter-class>com.chinasofti.ro.bizframework.core.web.filter.CharacterEncodingFilter</filter-class>
+</filter>
+
+<!-- 编码过滤器,解决乱码问题 -->
+<filter>
+<filter-name>encodingFilter</filter-name>
+<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+<init-param>
+<param-name>encoding</param-name>
+<param-value>UTF-8</param-value>
+</init-param>
+<init-param>
+<param-name>forceEncoding</param-name>
+<param-value>true</param-value>
+</init-param>
+</filter>
+<!-- 如果需要将应用注册到R1 Portal中，那么将SdkFilter，SSOClient，RightFilter放开-->
+<filter>
+<filter-name>SdkFilter</filter-name>
+<filter-class>com.icss.resourceone.sdk.SdkFilter</filter-class>
+<init-param>
+<param-name>SdkFilterType</param-name>
+<param-value>client</param-value>
+</init-param>
+</filter>
+<filter>
+<filter-name>SSOClient</filter-name>
+<filter-class>com.icss.resourceone.sso.client.SSOClient</filter-class>
+<init-param>
+<param-name>_except_urlpattern</param-name>
+<param-value>\.xml$|getLicInfos|licLocalModifyApply</param-value>
+</init-param>
+<init-param>
+<param-name>URIEncoding</param-name>
+<param-value>utf-8</param-value>
+</init-param>
+</filter>
+<filter>
+<filter-name>RightFilter</filter-name>
+<filter-class>com.icss.resourceone.sdk.right.RightFilter</filter-class>
+<init-param>
+<param-name>_except_urlpattern</param-name>
+<param-value>\.xml$</param-value>
+</init-param>
+</filter>
+
+<!-- 支持gzip过滤器 -->
+<filter>
+<filter-name>addHeaderFilter</filter-name>
+<filter-class>com.chinasofti.ro.bizframework.core.web.filter.AddHeaderFilter</filter-class>
+<init-param>
+<param-name>headers</param-name>
+<param-value>Content-Encoding=gzip</param-value>
+</init-param>
+</filter>
+
+<filter>
+<filter-name>localeFilter</filter-name>
+<filter-class>com.chinasofti.ro.bizframework.core.web.filter.LocaleFilter</filter-class>
+</filter>
+
+<filter>
+<filter-name>disableUrlSessionFilter</filter-name>
+<filter-class>com.chinasofti.ro.bizframework.core.web.filter.DisableUrlSessionFilter</filter-class>
+</filter>
+
+<filter>
+<filter-name>initialFilter</filter-name>
+<filter-class>com.chinasofti.ro.bizframework.core.web.filter.InitialFilter</filter-class>
+</filter>
+
+<filter>
+<filter-name>actionFilter</filter-name>
+<filter-class>com.chinasofti.ro.bizframework.core.mvc.ActionFilter</filter-class>
+</filter>
+
+<filter-mapping>
+<filter-name>initialFilter</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping>
+
+<!--  如果第三方应用访问应用进行请求中没有注明请求编码(request.getCharacterEncoding()方法无法获取到请求字符编码)
+可以在请求参数中增加charset参数显式设置请求的编码,防止Controller中获取的参数为乱码。
+示例:/context/index?charset=GBK
+注意:此功能需要将encodingFilter的forceEncoding设置为false才能生效
+<filter-mapping>
+<filter-name>characterEncodingFilter</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping>
+-->
+
+<filter-mapping>
+<filter-name>encodingFilter</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping>
+
+<filter-mapping>
+<filter-name>addHeaderFilter</filter-name>
+<url-pattern>*.gzjs</url-pattern>
+</filter-mapping>
+
+<filter-mapping>
+<filter-name>addHeaderFilter</filter-name>
+<url-pattern>*.gzcss</url-pattern>
+</filter-mapping>
+
+<filter-mapping>
+<filter-name>localeFilter</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping>
+
+<!-- 如果需要将应用注册到R1 Portal中，那么将SdkFilter，SSOClient，RightFilter放开-->
+<filter-mapping>
+<filter-name>SSOClient</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping>
+<filter-mapping>
+<filter-name>SdkFilter</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping>
+<filter-mapping>
+<filter-name>RightFilter</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping>
+
+<!-- 开启后可以自动过滤掉 URL后面的 jsessionid参数 -->
+<filter-mapping>
+<filter-name>disableUrlSessionFilter</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping>
+
+<filter-mapping>
+<filter-name>actionFilter</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping>
+
+<!-- Spring 刷新Introspector防止内存泄露,This listener should be registered as the first one in web.xml -->
+<listener>
+<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+</listener>
+
+<!-- 启动Spring的监听器 -->
+<listener>
+<listener-class>com.chinasofti.ro.bizframework.core.web.listener.StartupListener</listener-class>
+</listener>
+
+<!-- SpringMVC的转发器配置 -->
+<servlet>
+<servlet-name>action</servlet-name>
+<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+<load-on-startup>2</load-on-startup>
+</servlet>
+
+
+<servlet>
+<servlet-name>InitR1ClientServlet</servlet-name>
+<servlet-class>com.icss.resourceone.sdk.init.InitR1ClientServlet</servlet-class>
+<load-on-startup>1</load-on-startup>
+</servlet>
+
+<servlet>
+<servlet-name>R1ClientService</servlet-name>
+<servlet-class>com.icss.resourceone.sso.client.R1ClientService</servlet-class>
+</servlet>
+<servlet-mapping>
+<servlet-name>R1ClientService</servlet-name>
+<url-pattern>/R1ClientService</url-pattern>
+</servlet-mapping>
+
+<!-- Spring MVC 的注册 -->
+<servlet-mapping>
+<servlet-name>action</servlet-name>
+<url-pattern>*.do</url-pattern>
+</servlet-mapping>
+
+<!-- session 10分钟后超时 -->
+<session-config>
+<session-timeout>15</session-timeout>
+</session-config>
+
+<!-- 指定压缩版css、js文件mime类型 -->
+<mime-mapping>
+<extension>gzcss</extension>
+<mime-type>text/css</mime-type>
+</mime-mapping>
+
+<mime-mapping>
+<extension>gzjs</extension>
+<mime-type>text/javascript</mime-type>
+</mime-mapping>
+
+<!-- 欢迎页面 -->
+<welcome-file-list>
+<welcome-file>/about.jsp</welcome-file>
+</welcome-file-list>
+
+<!-- jstl标签定义 -->
+<taglib>
+<taglib-uri>c</taglib-uri>
+<taglib-location>/WEB-INF/tld/c.tld</taglib-location>
+</taglib>
+<taglib>
+<taglib-uri>c-rt</taglib-uri>
+<taglib-location>/WEB-INF/tld/c-rt.tld</taglib-location>
+</taglib>
+<taglib>
+<taglib-uri>fmt</taglib-uri>
+<taglib-location>/WEB-INF/tld/fmt.tld</taglib-location>
+</taglib>
+<taglib>
+<taglib-uri>fmt-rt</taglib-uri>
+<taglib-location>/WEB-INF/tld/fmt-rt.tld</taglib-location>
+</taglib>
+<taglib>
+<taglib-uri>x</taglib-uri>
+<taglib-location>/WEB-INF/tld/x.tld</taglib-location>
+</taglib>
+<taglib>
+<taglib-uri>x-rt</taglib-uri>
+<taglib-location>/WEB-INF/tld/x-rt.tld</taglib-location>
+</taglib>
+<taglib>
+<taglib-uri>biz</taglib-uri>
+<taglib-location>/WEB-INF/tld/bizframework.tld</taglib-location>
+</taglib>
+
+<!-- websphere需要用到的数据源jndi名称 -->
+<resource-ref id="ResourceRef_1">
+<res-ref-name>jdbc/REGIEAPP</res-ref-name>
+<res-type>javax.sql.DataSource</res-type>
+<res-auth>Container</res-auth>
+</resource-ref>
+
+<!-- 与Portal/Freamwork产品集成时所需要的JNDI数据源
+如果应用集成到Portal/Freamwork产品时取消注释-->
+<resource-ref id="ResourceRef_2">
+<res-ref-name>ResourceOne/DataSource</res-ref-name>
+<res-type>javax.sql.DataSource</res-type>
+<res-auth>Container</res-auth>
+</resource-ref>
+
+</web-app>

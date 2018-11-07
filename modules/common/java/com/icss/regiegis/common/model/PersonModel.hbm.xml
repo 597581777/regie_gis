@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE model-mapping PUBLIC "-//ResourceOne/Model Mapping DTD 5.0//EN" "http://www.chinasofti.com/model-mapping-5.0.dtd">
+
+<model-mapping>
+	<class name="com.icss.regiegis.common.model.PersonModel" table="N_M_PERSON">
+		<comment>组织人员操作数据SQL载体</comment>
+		<sql id="findPersonByUuid" type="default">
+		<![CDATA[
+		SELECT
+		    a.personuuid,
+		    a.userid,
+		    a.user_name,
+		    a.unit_code,
+		    a.unit_name,
+		    a.dept_code,
+		    a.dept_name,
+		    a.org_level,
+		    a.org_level_name,
+		    d.rolecode roleCode,
+		    b.ORGLEVELCODE,
+		    c.ORGLEVELCODE AS UNITLEVELCODE
+		FROM
+		    n_m_person a
+		LEFT JOIN n_m_person_role d ON a.personuuid=d.personuuid
+		LEFT JOIN
+		    n_m_org b
+		ON
+		    b.org_code = a.dept_code
+		LEFT JOIN
+		    n_m_org c
+		ON
+		    c.org_code = a.unit_code
+		WHERE
+		    a.personuuid=:personuuid
+		FETCH
+		    FIRST 1 rows only
+		]]>
+		</sql>
+		
+		<sql id="findSGY" type="default">
+			<![CDATA[
+			SELECT
+			    a.PERSONUUID,
+			    a.USERID,
+			    a.USER_NAME,
+			    a.UNIT_CODE,
+			    a.UNIT_NAME,
+			    a.DEPT_CODE,
+			    a.DEPT_NAME,
+			    b.ROLECODE
+			FROM
+			    N_M_PERSON a
+			INNER JOIN
+			    N_M_PERSON_ROLE b
+			ON
+			    a.PERSONUUID=b.PERSONUUID
+			WHERE
+				(a.DEPT_CODE = :deptCode OR
+			    a.DEPT_CODE LIKE ${sqlUtil.leftLike(":deptCode")})
+			AND b.ROLECODE=:roleCode
+			]]>
+		</sql>
+		
+		<id name="personuuid" type="java.lang.String">
+			<column name="personuuid">
+				<comment>标识</comment>
+			</column>
+		</id>
+		<property name="userid" type="java.lang.String">
+	      <column name="userid">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="password" type="java.lang.String">
+	      <column name="password">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="userName" type="java.lang.String">
+	      <column name="USER_NAME">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="unitCode" type="java.lang.String">
+	      <column name="UNIT_CODE">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="unitName" type="java.lang.String">
+	      <column name="UNIT_NAME">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="deptCode" type="java.lang.String">
+	      <column name="DEPT_CODE">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="deptName" type="java.lang.String">
+	      <column name="DEPT_NAME">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="orgLevel" type="java.lang.String">
+	      <column name="ORG_LEVEL">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="orgLevelName" type="java.lang.String">
+	      <column name="ORG_LEVEL_NAME">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="idnum" type="java.lang.String">
+	      <column name="IDNUM">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="sex" type="java.lang.String">
+	      <column name="SEX">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="birthdate" type="java.lang.String">
+	      <column name="BIRTHDATE">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="officetel" type="java.lang.String">
+	      <column name="OFFICETEL">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="mobile" type="java.lang.String">
+	      <column name="MOBILE">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="email" type="java.lang.String">
+	      <column name="EMAIL">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="msnqq" type="java.lang.String">
+	      <column name="MSN_QQ">
+	        <comment></comment>
+	      </column>
+	    </property>
+	    <property name="roleCode" type="java.lang.String">
+	      <column name="ROLECODE">
+	        <comment></comment>
+	      </column>
+	    </property>
+	</class>
+</model-mapping>

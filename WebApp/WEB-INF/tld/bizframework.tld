@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE taglib
+  PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+  "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+	<tlib-version>4.2</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>biz</short-name>
+	<display-name>BizFramework taglib</display-name>
+	<tag>
+		<name>error</name>
+		<tag-class>com.chinasofti.ro.bizframework.core.tags.ErrorTag</tag-class>
+		<body-content>empty</body-content>
+		<description>Show the error info by key</description>
+		<attribute>
+			<name>key</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>style</name>
+		</attribute>
+	</tag>
+	<tag>
+		<name>actionContext</name>
+		<tag-class>com.chinasofti.ro.bizframework.core.tags.ActionContextTag</tag-class>
+		<body-content>empty</body-content>
+		<description>Display the data stored in ActionContext by key</description>
+		<attribute>
+			<name>key</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>display</name>
+		<tag-class>com.chinasofti.ro.bizframework.core.tags.DisplayTag</tag-class>
+		<body-content>empty</body-content>
+		<description>display info</description>
+		<attribute>
+			<name>level</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>remove</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>out</name>
+		<tag-class>com.chinasofti.ro.bizframework.core.tags.OutExtentedTag</tag-class>
+		<body-content>JSO</body-content>
+		<description>handle the array property output</description>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>default</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>escapeXml</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>separator</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>if the value is an array, then split by separator and output it</description>
+		</attribute>
+	</tag>
+	<tag>
+		<name>page</name>
+		<tag-class>com.chinasofti.ro.bizframework.core.tags.PageTag</tag-class>
+		<description>分页组件</description>
+
+		<attribute>
+			<name>targetForm</name>
+			<required>false</required>
+			<description>用于增加分页参数的表单，适用于查询表单和分页在同一个页面的情况.
+				如果不加这个参数，将创建一个新表单</description>
+		</attribute>
+		<attribute>
+			<name>sizes</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+			<description>分页大小选项，用逗号分隔</description>
+		</attribute>
+		<attribute>
+			<name>theme</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+			<description>主题，会调用工程中styles/page/*.vm进行渲染，默认是default</description>
+		</attribute>
+		<attribute>
+			<name>autoParams</name>
+			<required>false</required>
+			<type>boolean</type>
+			<description>当targetForm为空的时候，如果autoParams为true则会
+				自动从request中获取字段值（可能会包含垃圾数据），
+				为false则需要用pageParam子标签来指定需要传递的参数名</description>
+		</attribute>
+		<example>
+			1. 直接使用&lt;biz:page autoParams="true" /&gt;
+			2. 有选择地传递参数：&lt;biz:page autoParams="true"&gt;&lt;biz:pageParam
+			value="amount"/&gt;&lt;/biz:page&gt; </example>
+	</tag>
+	<tag>
+		<name>pageParam</name>
+		<tag-class>com.chinasofti.ro.bizframework.core.tags.PageParamTag</tag-class>
+		<body-content>empty</body-content>
+		<description>跳转时需要加的参数</description>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<description>需要传递的参数</description>
+		</attribute>
+	</tag>
+</taglib>

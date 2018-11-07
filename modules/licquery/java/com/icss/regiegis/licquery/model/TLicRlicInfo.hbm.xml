@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE model-mapping PUBLIC "-//ResourceOne/Model Mapping DTD 5.0//EN" "http://www.chinasofti.com/model-mapping-5.0.dtd">
+
+<model-mapping>
+  <class name="com.icss.regiegis.licquery.model.TLicRlicInfo" table="T_LIC_RLIC_INFO">
+    <comment>TLicRlicInfo</comment>
+    <sql id="list" type="default"><![CDATA[SELECT LIC_UUID,LIC_NO,COMPANY_NAME,INDU_COMM_BUSINESS_LICENCE_NUMBER,MANAGER_NAME,IDCARD,BUSINESS_ADDR,IS_DIFFER_HOME_ADDR,SUPPLY_COMPANY,ACCREDI_DATE,VALIDATE_START,VALIDATE_END,DELIVERY_DATE,ISSUE_DATE,NOW_EFFECT_STATUS,COLUMN1,COLUMN2,COLUMN3,LIC_ISSUING_ORG,RESALE_PERSON_ID,MANAGER_SCOPE,GROUND_OWNERSHIP,LEASE_TIMELIMIT_START,LEASE_TIMELIMIT_END,IS_VALIDATE,ISSUE_ORG_CODE,RETAIL_CID_TYPE,RETAIL_CID_NO,RETAIL_CID_ADDRESS,RETAIL_ADDRESS,CONTRACT_PERSON,RETAIL_TEL,SPECIAL_PERSON_GROUP,BUSI_MGR_LIC_VALIDITY,BIZ_FORMAT,AREA_TYPE,APPLICANT_PHOTO,ECO_TYPE,ECO_TYPE_OTHER,RLIC_ADC,ORG_UUID,CREATE_TIME,BIZ_AREA,IS_CHAIN,IS_MAIN,IS_BUSINESS,SPECIAL_GROUP_TYPE_OTHER,OLD_LIC_NO,SUPPLY_COMPANY_CODE,AGENT_NAME,AGENT_IDCARD,FIRST_ACCREDI_DATE,REGISTERED_CAPITAL,AGENT_IDCARD_TYPE,LAST_MODIFY_TIME,LAST_APPLY_TIME,LAST_OPERATE_COMPLETE_TIME,LAST_OPERATE_TYPE,LAST_OPERATE_RESULT,LAST_OPERATE_NAME,LAST_OPERATE_LOGNAME,SYNC_TIME,CLIENT_CODE,CLIENT_NAME,LONGITUDE,LATITUDE,STAFF_MEMBER_UUID,STAFF_MEMBER_NAME,BIZ_PLACE_POSTCODE,AGENT_TEL,IS_MARKET_IN,MARKET_CODE,MARKET_NAME,GRIDDING,FIRST_GRIDDING,TWO_GRIDDING,APPLY_CLOSE_BUSINESS_DATE_START,APPLY_CLOSE_BUSINESS_DATE_END,FAMILY_MEMBERS_NAMES FROM T_LIC_RLIC_INFO WHERE 1=1]]></sql>
+    
+    <sql id="queryLicInfos" type="default">
+    	SELECT 
+    		LIC_UUID,LIC_NO,COMPANY_NAME,INDU_COMM_BUSINESS_LICENCE_NUMBER,MANAGER_NAME,IDCARD,BUSINESS_ADDR,IS_DIFFER_HOME_ADDR,SUPPLY_COMPANY,ACCREDI_DATE,VALIDATE_START,VALIDATE_END,DELIVERY_DATE,ISSUE_DATE,NOW_EFFECT_STATUS,COLUMN1,COLUMN2,COLUMN3,LIC_ISSUING_ORG,RESALE_PERSON_ID,MANAGER_SCOPE,GROUND_OWNERSHIP,LEASE_TIMELIMIT_START,LEASE_TIMELIMIT_END,IS_VALIDATE,ISSUE_ORG_CODE,RETAIL_CID_TYPE,RETAIL_CID_NO,RETAIL_CID_ADDRESS,RETAIL_ADDRESS,CONTRACT_PERSON,RETAIL_TEL,SPECIAL_PERSON_GROUP,BUSI_MGR_LIC_VALIDITY,BIZ_FORMAT,AREA_TYPE,APPLICANT_PHOTO,ECO_TYPE,ECO_TYPE_OTHER,RLIC_ADC,ORG_UUID,CREATE_TIME,BIZ_AREA,IS_CHAIN,IS_MAIN,IS_BUSINESS,SPECIAL_GROUP_TYPE_OTHER,OLD_LIC_NO,SUPPLY_COMPANY_CODE,AGENT_NAME,AGENT_IDCARD,FIRST_ACCREDI_DATE,REGISTERED_CAPITAL,AGENT_IDCARD_TYPE,LAST_MODIFY_TIME,LAST_APPLY_TIME,LAST_OPERATE_COMPLETE_TIME,LAST_OPERATE_TYPE,LAST_OPERATE_RESULT,LAST_OPERATE_NAME,LAST_OPERATE_LOGNAME,CLIENT_CODE,CLIENT_NAME,LONGITUDE,LATITUDE,STAFF_MEMBER_UUID,STAFF_MEMBER_NAME,BIZ_PLACE_POSTCODE,AGENT_TEL,IS_MARKET_IN,MARKET_CODE,MARKET_NAME,GRIDDING,FIRST_GRIDDING,TWO_GRIDDING,APPLY_CLOSE_BUSINESS_DATE_START,APPLY_CLOSE_BUSINESS_DATE_END,FAMILY_MEMBERS_NAMES
+    	FROM T_LIC_RLIC_INFO 
+    	WHERE 
+    		LIC_NO IN (:licNos)
+    </sql>
+    
+    <sql id="queryById" type="default">
+    	SELECT 
+    		LIC_UUID,LIC_NO,COMPANY_NAME,INDU_COMM_BUSINESS_LICENCE_NUMBER,MANAGER_NAME,IDCARD,BUSINESS_ADDR,IS_DIFFER_HOME_ADDR,SUPPLY_COMPANY,ACCREDI_DATE,VALIDATE_START,VALIDATE_END,DELIVERY_DATE,ISSUE_DATE,NOW_EFFECT_STATUS,COLUMN1,COLUMN2,COLUMN3,LIC_ISSUING_ORG,RESALE_PERSON_ID,MANAGER_SCOPE,GROUND_OWNERSHIP,LEASE_TIMELIMIT_START,LEASE_TIMELIMIT_END,IS_VALIDATE,ISSUE_ORG_CODE,RETAIL_CID_TYPE,RETAIL_CID_NO,RETAIL_CID_ADDRESS,RETAIL_ADDRESS,CONTRACT_PERSON,RETAIL_TEL,SPECIAL_PERSON_GROUP,BUSI_MGR_LIC_VALIDITY,BIZ_FORMAT,AREA_TYPE,APPLICANT_PHOTO,ECO_TYPE,ECO_TYPE_OTHER,RLIC_ADC,ORG_UUID,CREATE_TIME,BIZ_AREA,IS_CHAIN,IS_MAIN,IS_BUSINESS,SPECIAL_GROUP_TYPE_OTHER,OLD_LIC_NO,SUPPLY_COMPANY_CODE,AGENT_NAME,AGENT_IDCARD,FIRST_ACCREDI_DATE,REGISTERED_CAPITAL,AGENT_IDCARD_TYPE,LAST_MODIFY_TIME,LAST_APPLY_TIME,LAST_OPERATE_COMPLETE_TIME,LAST_OPERATE_TYPE,LAST_OPERATE_RESULT,LAST_OPERATE_NAME,LAST_OPERATE_LOGNAME,CLIENT_CODE,CLIENT_NAME,LONGITUDE,LATITUDE,STAFF_MEMBER_UUID,STAFF_MEMBER_NAME,BIZ_PLACE_POSTCODE,AGENT_TEL,IS_MARKET_IN,MARKET_CODE,MARKET_NAME,GRIDDING,FIRST_GRIDDING,TWO_GRIDDING,APPLY_CLOSE_BUSINESS_DATE_START,APPLY_CLOSE_BUSINESS_DATE_END,FAMILY_MEMBERS_NAMES
+    	FROM T_LIC_RLIC_INFO 
+    	WHERE 
+    		LIC_UUID = :licUuid
+    </sql>
+    
+    <sql id="queryByLicNo" type="default">
+    	SELECT 
+    		LIC_UUID,LIC_NO,COMPANY_NAME,INDU_COMM_BUSINESS_LICENCE_NUMBER,MANAGER_NAME,IDCARD,BUSINESS_ADDR,IS_DIFFER_HOME_ADDR,SUPPLY_COMPANY,ACCREDI_DATE,VALIDATE_START,VALIDATE_END,DELIVERY_DATE,ISSUE_DATE,NOW_EFFECT_STATUS,COLUMN1,COLUMN2,COLUMN3,LIC_ISSUING_ORG,RESALE_PERSON_ID,MANAGER_SCOPE,GROUND_OWNERSHIP,LEASE_TIMELIMIT_START,LEASE_TIMELIMIT_END,IS_VALIDATE,ISSUE_ORG_CODE,RETAIL_CID_TYPE,RETAIL_CID_NO,RETAIL_CID_ADDRESS,RETAIL_ADDRESS,CONTRACT_PERSON,RETAIL_TEL,SPECIAL_PERSON_GROUP,BUSI_MGR_LIC_VALIDITY,BIZ_FORMAT,AREA_TYPE,APPLICANT_PHOTO,ECO_TYPE,ECO_TYPE_OTHER,RLIC_ADC,ORG_UUID,CREATE_TIME,BIZ_AREA,IS_CHAIN,IS_MAIN,IS_BUSINESS,SPECIAL_GROUP_TYPE_OTHER,OLD_LIC_NO,SUPPLY_COMPANY_CODE,AGENT_NAME,AGENT_IDCARD,FIRST_ACCREDI_DATE,REGISTERED_CAPITAL,AGENT_IDCARD_TYPE,LAST_MODIFY_TIME,LAST_APPLY_TIME,LAST_OPERATE_COMPLETE_TIME,LAST_OPERATE_TYPE,LAST_OPERATE_RESULT,LAST_OPERATE_NAME,LAST_OPERATE_LOGNAME,CLIENT_CODE,CLIENT_NAME,LONGITUDE,LATITUDE,STAFF_MEMBER_UUID,STAFF_MEMBER_NAME,BIZ_PLACE_POSTCODE,AGENT_TEL,IS_MARKET_IN,MARKET_CODE,MARKET_NAME,GRIDDING,FIRST_GRIDDING,TWO_GRIDDING,APPLY_CLOSE_BUSINESS_DATE_START,APPLY_CLOSE_BUSINESS_DATE_END,FAMILY_MEMBERS_NAMES
+    	FROM T_LIC_RLIC_INFO 
+    	WHERE 
+    		LIC_NO = :licNo
+    </sql>
+    
+    <id name="licUuid" type="java.lang.String">
+      <column name="LIC_UUID" not-null="true" length="32">
+        <comment>licUuid</comment>
+      </column>
+      <generator class="uuid"/>
+    </id>
+    <property name="licNo" type="java.lang.String">
+      <column name="LIC_NO" length="32">
+        <comment>licNo</comment>
+      </column>
+    </property>
+    <property name="companyName" type="java.lang.String">
+      <column name="COMPANY_NAME" length="200">
+        <comment>companyName</comment>
+      </column>
+    </property>
+    <property name="induCommBusinessLicenceNumber" type="java.lang.String">
+      <column name="INDU_COMM_BUSINESS_LICENCE_NUMBER" length="50">
+        <comment>induCommBusinessLicenceNumber</comment>
+      </column>
+    </property>
+    <property name="managerName" type="java.lang.String">
+      <column name="MANAGER_NAME" length="60">
+        <comment>managerName</comment>
+      </column>
+    </property>
+    <property name="idcard" type="java.lang.String">
+      <column name="IDCARD" length="60">
+        <comment>idcard</comment>
+      </column>
+    </property>
+    <property name="businessAddr" type="java.lang.String">
+      <column name="BUSINESS_ADDR" length="256">
+        <comment>businessAddr</comment>
+      </column>
+    </property>
+    <property name="isDifferHomeAddr" type="java.lang.String">
+      <column name="IS_DIFFER_HOME_ADDR" length="1">
+        <comment>isDifferHomeAddr</comment>
+      </column>
+    </property>
+    <property name="supplyCompany" type="java.lang.String">
+      <column name="SUPPLY_COMPANY" length="100">
+        <comment>supplyCompany</comment>
+      </column>
+    </property>
+    <property name="accrediDate" type="java.sql.Date">
+      <column name="ACCREDI_DATE">
+        <comment>accrediDate</comment>
+      </column>
+    </property>
+    <property name="validateStart" type="java.sql.Date">
+      <column name="VALIDATE_START">
+        <comment>validateStart</comment>
+      </column>
+    </property>
+    <property name="validateEnd" type="java.sql.Date">
+      <column name="VALIDATE_END">
+        <comment>validateEnd</comment>
+      </column>
+    </property>
+    <property name="deliveryDate" type="java.sql.Date">
+      <column name="DELIVERY_DATE">
+        <comment>deliveryDate</comment>
+      </column>
+    </property>
+    <property name="issueDate" type="java.sql.Date">
+      <column name="ISSUE_DATE">
+        <comment>issueDate</comment>
+      </column>
+    </property>
+    <property name="nowEffectStatus" type="java.lang.String">
+      <column name="NOW_EFFECT_STATUS" length="32">
+        <comment>nowEffectStatus</comment>
+      </column>
+    </property>
+    <property name="column1" type="java.lang.String">
+      <column name="COLUMN1" length="32">
+        <comment>column1</comment>
+      </column>
+    </property>
+    <property name="column2" type="java.lang.String">
+      <column name="COLUMN2" length="32">
+        <comment>column2</comment>
+      </column>
+    </property>
+    <property name="column3" type="java.lang.String">
+      <column name="COLUMN3" length="32">
+        <comment>column3</comment>
+      </column>
+    </property>
+    <property name="licIssuingOrg" type="java.lang.String">
+      <column name="LIC_ISSUING_ORG" length="200">
+        <comment>licIssuingOrg</comment>
+      </column>
+    </property>
+    <property name="resalePersonId" type="java.lang.String">
+      <column name="RESALE_PERSON_ID" length="32">
+        <comment>resalePersonId</comment>
+      </column>
+    </property>
+    <property name="managerScope" type="java.lang.String">
+      <column name="MANAGER_SCOPE" length="20">
+        <comment>managerScope</comment>
+      </column>
+    </property>
+    <property name="groundOwnership" type="java.lang.String">
+      <column name="GROUND_OWNERSHIP" length="8">
+        <comment>groundOwnership</comment>
+      </column>
+    </property>
+    <property name="leaseTimelimitStart" type="java.sql.Date">
+      <column name="LEASE_TIMELIMIT_START">
+        <comment>leaseTimelimitStart</comment>
+      </column>
+    </property>
+    <property name="leaseTimelimitEnd" type="java.sql.Date">
+      <column name="LEASE_TIMELIMIT_END">
+        <comment>leaseTimelimitEnd</comment>
+      </column>
+    </property>
+    <property name="isValidate" type="java.lang.Integer">
+      <column name="IS_VALIDATE">
+        <comment>isValidate</comment>
+      </column>
+    </property>
+    <property name="issueOrgCode" type="java.lang.String">
+      <column name="ISSUE_ORG_CODE" length="32">
+        <comment>issueOrgCode</comment>
+      </column>
+    </property>
+    <property name="retailCidType" type="java.lang.String">
+      <column name="RETAIL_CID_TYPE" length="32">
+        <comment>retailCidType</comment>
+      </column>
+    </property>
+    <property name="retailCidNo" type="java.lang.String">
+      <column name="RETAIL_CID_NO" length="32">
+        <comment>retailCidNo</comment>
+      </column>
+    </property>
+    <property name="retailCidAddress" type="java.lang.String">
+      <column name="RETAIL_CID_ADDRESS" length="256">
+        <comment>retailCidAddress</comment>
+      </column>
+    </property>
+    <property name="retailAddress" type="java.lang.String">
+      <column name="RETAIL_ADDRESS" length="256">
+        <comment>retailAddress</comment>
+      </column>
+    </property>
+    <property name="contractPerson" type="java.lang.String">
+      <column name="CONTRACT_PERSON" length="50">
+        <comment>contractPerson</comment>
+      </column>
+    </property>
+    <property name="retailTel" type="java.lang.String">
+      <column name="RETAIL_TEL" length="100">
+        <comment>retailTel</comment>
+      </column>
+    </property>
+    <property name="specialPersonGroup" type="java.lang.String">
+      <column name="SPECIAL_PERSON_GROUP" length="200">
+        <comment>specialPersonGroup</comment>
+      </column>
+    </property>
+    <property name="busiMgrLicValidity" type="java.lang.String">
+      <column name="BUSI_MGR_LIC_VALIDITY" length="25">
+        <comment>busiMgrLicValidity</comment>
+      </column>
+    </property>
+    <property name="bizFormat" type="java.lang.Integer">
+      <column name="BIZ_FORMAT">
+        <comment>bizFormat</comment>
+      </column>
+    </property>
+    <property name="areaType" type="java.lang.Integer">
+      <column name="AREA_TYPE">
+        <comment>areaType</comment>
+      </column>
+    </property>
+    <property name="applicantPhoto" type="java.lang.String">
+      <column name="APPLICANT_PHOTO" length="256">
+        <comment>applicantPhoto</comment>
+      </column>
+    </property>
+    <property name="ecoType" type="java.lang.Short">
+      <column name="ECO_TYPE">
+        <comment>ecoType</comment>
+      </column>
+    </property>
+    <property name="ecoTypeOther" type="java.lang.String">
+      <column name="ECO_TYPE_OTHER" length="60">
+        <comment>ecoTypeOther</comment>
+      </column>
+    </property>
+    <property name="rlicAdc" type="java.lang.String">
+      <column name="RLIC_ADC" length="6">
+        <comment>rlicAdc</comment>
+      </column>
+    </property>
+    <property name="orgUuid" type="java.lang.String">
+      <column name="ORG_UUID" length="64">
+        <comment>orgUuid</comment>
+      </column>
+    </property>
+    <property name="createTime" type="java.sql.Timestamp">
+      <column name="CREATE_TIME">
+        <comment>createTime</comment>
+      </column>
+    </property>
+    <property name="bizArea" type="java.lang.Double">
+      <column name="BIZ_AREA" precision="10">
+        <comment>bizArea</comment>
+      </column>
+    </property>
+    <property name="isChain" type="java.lang.String">
+      <column name="IS_CHAIN" length="1">
+        <comment>isChain</comment>
+      </column>
+    </property>
+    <property name="isMain" type="java.lang.String">
+      <column name="IS_MAIN" length="1">
+        <comment>isMain</comment>
+      </column>
+    </property>
+    <property name="isBusiness" type="java.lang.String">
+      <column name="IS_BUSINESS" length="1">
+        <comment>isBusiness</comment>
+      </column>
+    </property>
+    <property name="specialGroupTypeOther" type="java.lang.String">
+      <column name="SPECIAL_GROUP_TYPE_OTHER" length="20">
+        <comment>specialGroupTypeOther</comment>
+      </column>
+    </property>
+    <property name="oldLicNo" type="java.lang.String">
+      <column name="OLD_LIC_NO" length="50">
+        <comment>oldLicNo</comment>
+      </column>
+    </property>
+    <property name="supplyCompanyCode" type="java.lang.String">
+      <column name="SUPPLY_COMPANY_CODE" length="32">
+        <comment>supplyCompanyCode</comment>
+      </column>
+    </property>
+    <property name="agentName" type="java.lang.String">
+      <column name="AGENT_NAME" length="60">
+        <comment>agentName</comment>
+      </column>
+    </property>
+    <property name="agentIdcard" type="java.lang.String">
+      <column name="AGENT_IDCARD" length="60">
+        <comment>agentIdcard</comment>
+      </column>
+    </property>
+    <property name="firstAccrediDate" type="java.sql.Date">
+      <column name="FIRST_ACCREDI_DATE">
+        <comment>firstAccrediDate</comment>
+      </column>
+    </property>
+    <property name="registeredCapital" type="java.math.BigDecimal">
+      <column name="REGISTERED_CAPITAL" precision="18">
+        <comment>registeredCapital</comment>
+      </column>
+    </property>
+    <property name="agentIdcardType" type="java.lang.Short">
+      <column name="AGENT_IDCARD_TYPE">
+        <comment>agentIdcardType</comment>
+      </column>
+    </property>
+    <property name="lastModifyTime" type="java.sql.Timestamp">
+      <column name="LAST_MODIFY_TIME">
+        <comment>lastModifyTime</comment>
+      </column>
+    </property>
+    <property name="lastApplyTime" type="java.sql.Timestamp">
+      <column name="LAST_APPLY_TIME">
+        <comment>lastApplyTime</comment>
+      </column>
+    </property>
+    <property name="lastOperateCompleteTime" type="java.sql.Timestamp">
+      <column name="LAST_OPERATE_COMPLETE_TIME">
+        <comment>lastOperateCompleteTime</comment>
+      </column>
+    </property>
+    <property name="lastOperateType" type="java.lang.Integer">
+      <column name="LAST_OPERATE_TYPE">
+        <comment>lastOperateType</comment>
+      </column>
+    </property>
+    <property name="lastOperateResult" type="java.lang.Integer">
+      <column name="LAST_OPERATE_RESULT">
+        <comment>lastOperateResult</comment>
+      </column>
+    </property>
+    <property name="lastOperateName" type="java.lang.String">
+      <column name="LAST_OPERATE_NAME" length="64">
+        <comment>lastOperateName</comment>
+      </column>
+    </property>
+    <property name="lastOperateLogname" type="java.lang.String">
+      <column name="LAST_OPERATE_LOGNAME" length="64">
+        <comment>lastOperateLogname</comment>
+      </column>
+    </property>
+    <property name="clientCode" type="java.lang.String">
+      <column name="CLIENT_CODE" length="64">
+        <comment>clientCode</comment>
+      </column>
+    </property>
+    <property name="clientName" type="java.lang.String">
+      <column name="CLIENT_NAME" length="256">
+        <comment>clientName</comment>
+      </column>
+    </property>
+    <property name="longitude" type="java.lang.String">
+      <column name="LONGITUDE" length="24">
+        <comment>longitude</comment>
+      </column>
+    </property>
+    <property name="latitude" type="java.lang.String">
+      <column name="LATITUDE" length="24">
+        <comment>latitude</comment>
+      </column>
+    </property>
+    <property name="staffMemberUuid" type="java.lang.String">
+      <column name="STAFF_MEMBER_UUID" length="64">
+        <comment>staffMemberUuid</comment>
+      </column>
+    </property>
+    <property name="staffMemberName" type="java.lang.String">
+      <column name="STAFF_MEMBER_NAME" length="64">
+        <comment>staffMemberName</comment>
+      </column>
+    </property>
+    <property name="bizPlacePostcode" type="java.lang.String">
+      <column name="BIZ_PLACE_POSTCODE" length="32">
+        <comment>bizPlacePostcode</comment>
+      </column>
+    </property>
+    <property name="agentTel" type="java.lang.String">
+      <column name="AGENT_TEL" length="64">
+        <comment>agentTel</comment>
+      </column>
+    </property>
+    <property name="isMarketIn" type="java.lang.String">
+      <column name="IS_MARKET_IN" length="8">
+        <comment>isMarketIn</comment>
+      </column>
+    </property>
+    <property name="marketCode" type="java.lang.String">
+      <column name="MARKET_CODE" length="64">
+        <comment>marketCode</comment>
+      </column>
+    </property>
+    <property name="marketName" type="java.lang.String">
+      <column name="MARKET_NAME" length="512">
+        <comment>marketName</comment>
+      </column>
+    </property>
+    <property name="gridding" type="java.lang.String">
+      <column name="GRIDDING" length="32">
+        <comment>gridding</comment>
+      </column>
+    </property>
+    <property name="firstGridding" type="java.lang.String">
+      <column name="FIRST_GRIDDING" length="32">
+        <comment>firstGridding</comment>
+      </column>
+    </property>
+    <property name="twoGridding" type="java.lang.String">
+      <column name="TWO_GRIDDING" length="32">
+        <comment>twoGridding</comment>
+      </column>
+    </property>
+    <property name="applyCloseBusinessDateStart" type="java.sql.Date">
+      <column name="APPLY_CLOSE_BUSINESS_DATE_START">
+        <comment>applyCloseBusinessDateStart</comment>
+      </column>
+    </property>
+    <property name="applyCloseBusinessDateEnd" type="java.sql.Date">
+      <column name="APPLY_CLOSE_BUSINESS_DATE_END">
+        <comment>applyCloseBusinessDateEnd</comment>
+      </column>
+    </property>
+    <property name="familyMembersNames" type="java.lang.String">
+      <column name="FAMILY_MEMBERS_NAMES" length="1024">
+        <comment>familyMembersNames</comment>
+      </column>
+    </property>
+  </class>
+</model-mapping>

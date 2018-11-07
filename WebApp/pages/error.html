@@ -1,0 +1,64 @@
+<html>
+<head>
+<title>${errorTitle}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+html,body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Microsoft Yahei',Helvetica, Arial, Sans;
+	/** background: #EEEEEE;*/
+}
+.block {
+	padding: 20px;
+	border-bottom: 1px solid #aaa;
+}
+#header h1 {
+	font-weight: normal;
+	font-size: 28px;
+	margin: 0;
+}
+#header h1 span {
+	font-weight: normal;
+	font-size: 16px;
+}
+#more {
+	color: #666;
+	font-size: 80%;
+	border: none;
+}
+#header {
+	background: #fcd2da;
+}
+
+#header p {
+	color: #333;
+	line-height: 1;
+}
+</style>
+<body>
+<div id="header" class="block">
+<h1>
+	${errorTitle}
+	<span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:history.back();">>>>返回上一页</a></span>
+</h1>
+<hr>
+#if (${errorDescription})
+<p>异常信息：${errorDescription}</p>
+#end
+
+#if (${errorCode})
+<p>异常代码：${errorCode}</p>
+#end
+
+</div>
+<div id="more" class="block">
+	<h5>详细异常信息：</h5>
+	#if(${exception})
+		${exception}
+	#else
+		无详细信息
+	#end
+</div>
+</body>
+</html>
